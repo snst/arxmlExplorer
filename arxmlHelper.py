@@ -45,31 +45,40 @@ def getDirectChildNodesByName(parent, name):
 
 
 def getShortName(node):
-    return getValueByName(node, 'SHORT-NAME')
+    val = getValueByName(node, 'SHORT-NAME')
+    return val
 
 def getXmlErrorCode(node):
-    return getValueByName(node, 'ERROR-CODE')
+    val = getValueByName(node, 'ERROR-CODE')
+    return val
 
 def getCategory(node):
-    return getValueByName(node, 'CATEGORY')
+    val = getValueByName(node, 'CATEGORY')
+    return val
 
 def getType(node):
-    return getValueByName(node, 'TYPE-TREF')
+    val = getValueByName(node, 'TYPE-TREF')
+    return val
 
 def getDirection(node):
-    return getValueByName(node, 'DIRECTION')
+    val = getValueByName(node, 'DIRECTION')
+    return val
 
 def getXmlImplementationDataTypeRef(node):
-    return getValueByNameDeep(node, 'IMPLEMENTATION-DATA-TYPE-REF')
+    val = getValueByNameDeep(node, 'IMPLEMENTATION-DATA-TYPE-REF')
+    return val
 
 def getXmlBaseTypeRef(node):
-    return getValueByNameDeep(node, 'BASE-TYPE-REF')
+    val = getValueByNameDeep(node, 'BASE-TYPE-REF')
+    return val
 
 def getXmlArraySize(node):
-    return getValueByName(node, 'ARRAY-SIZE')
+    val = getValueByName(node, 'ARRAY-SIZE')
+    return val
 
 def getXmlArraySizeSemantics(node):
-    return getValueByName(node, 'ARRAY-SIZE-SEMANTICS')
+    val = getValueByName(node, 'ARRAY-SIZE-SEMANTICS')
+    return val
 
 def getNameSpace2(node):
     nodeName = None
@@ -108,6 +117,7 @@ def getNameSpaceIntern(node):
 
 
 def getNameSpace(node):
-    return getNameSpaceIntern(node.parentNode)
+    val = getNameSpaceIntern(node.parentNode)
+    return val
 
     

@@ -67,9 +67,59 @@ class MethodArgumentsTreeView():
             for s in itemlist:
                 #self.show_datatype_element(s, item)
                 self.show_datatype(s, item)
-
-        
         pass
+
+    def show_method_param(self, node, parent):
+        item = QStandardItem(getShortName(node))
+        #QStandardItem(getNameSpace(node))
+        namespace = QStandardItem(getType(node))
+        #namespace.setToolTip('namespace')
+        parent.appendRow([item, QStandardItem(getDirection(node)), namespace])
+        self.attach_xml_node(item, node)
+        return item
+
+    def show_method_error(self, node, parent):
+        error_name = getXmlContent(node)
+        error_number = '' # self.model_tree.get_application_error_value(error_name)
+        n = QStandardItem(error_name)
+        parent.appendRow([n])
+        k = parent.rowCount()
+        self.treeView.setFirstColumnSpanned(k-1, parent.index(), True)
+
+
+    def show_method(self, node, model):
+        # methode name
+        item = self.add(getShortName(node), '', '', QStandardItem(getNameSpace(node)), node)
+        #method arguments
+        itemlist = node.getElementsByTagName('ARGUMENT-DATA-PROTOTYPE')
+        for s in itemlist:
+            self.show_method_param(s, item)
+        #method errors
+        item = self.add('Possible Errors', '', '', '')
+        itemlist = node.getElementsByTagName('POSSIBLE-ERROR-REF')
+        for s in itemlist:
+            self.show_method_error(s, item)
+            pass
+
+
+        pass
+
+
+    def clear_method(self):
+        if self.model != None:
+            self.model.clear()
+        self.model = QStandardItemModel(0, 5, None)
+        self.model.setHeaderData(0, Qt.Horizontal, "Name")
+        self.model.setHeaderData(1, Qt.Horizontal, "Category")
+        self.model.setHeaderData(2, Qt.Horizontal, "?")
+        self.model.setHeaderData(3, Qt.Horizontal, "?")
+        self.model.setHeaderData(4, Qt.Horizontal, "Ref Dest")
+        self.treeView.setModel(self.model)
+        self.treeView.setColumnWidth(0, 200)
+        self.treeView.setColumnWidth(1, 150)
+        self.treeView.setColumnWidth(4, 250)
+        pass     
+
 
     def clear_obsolete(self):
         if self.model != None:

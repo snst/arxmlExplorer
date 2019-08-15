@@ -3,25 +3,17 @@
 # Copyright 2019 by Stefan Schmidt
 import os
 import sys
-from PyQt5.QtGui import QIcon, QStandardItem
-from PyQt5.QtCore import (QDate, QDateTime, QRegExp, QSortFilterProxyModel, Qt,
-QTime, pyqtSlot, QObject, pyqtSignal)
-from PyQt5.QtGui import QStandardItemModel
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
 from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QGridLayout,
 QGroupBox, QHBoxLayout, QLabel, QLineEdit, QTreeView, QVBoxLayout,
-QWidget, QPushButton, QDialog, QPlainTextEdit, QTabWidget)
+QWidget, QPushButton, QDialog, QPlainTextEdit, QTabWidget, QSplitter)
 from xml.dom import minidom
 from MethodArgumentEditor import *
 from ModelTreeView import *
 from MethodArgumentsTreeView import *
 from arxmlHelper import *
 from MethodErrorListWidget import *
-
-def showdialog():
-    #demo = MethodArgumentEditor()
-    #demo.exec_()
-    pass
-
 
 
 class App(QWidget):
@@ -34,7 +26,7 @@ class App(QWidget):
         self.width = 800
         self.height = 700
         self.initUI()
-        path = './models/demo3'
+        path = './models/demo'
         files = [f for f in os.listdir(path) if os.path.isfile(path + '/' + f)]
         for f in files:
             if f.endswith('.arxml'):
@@ -50,32 +42,29 @@ class App(QWidget):
         self.tabs = QTabWidget()
         self.plaintext_xml = QPlainTextEdit()
         self.plaintext_xml.resize(400,150)
+        self.splitter1 = QSplitter(Qt.Vertical)
+
+        self.splitter1.addWidget(self.model_tree.groupDataTypes)
+        self.splitter1.addWidget(self.detail.groupDataTypes)
+        self.splitter1.addWidget(self.tabs)
 
         mainLayout = QVBoxLayout()
-        mainLayout.addWidget(self.model_tree.groupDataTypes)
-        mainLayout.addWidget(self.detail.groupDataTypes)
-        mainLayout.addWidget(self.tabs)
+        #mainLayout.addWidget(self.model_tree.groupDataTypes)
+        #mainLayout.addWidget(self.detail.groupDataTypes)
+        #mainLayout.addWidget(self.tabs)
 
-        self.tabs.addTab(self.combo,"Details")
         self.tabs.addTab(self.plaintext_xml,"XML")
+        self.tabs.addTab(self.combo,"Details")
         self.tabs.addTab(self.errorlist.groupDataTypes, "Possible Errors")
-
-        #b = QPushButton()
-        #b.setText("Hello World!")
-        #mainLayout.addWidget(b)
-        #b.clicked.connect(showdialog)
 
         self.model_tree.treeView.selectionModel().selectionChanged.connect(self.show_model_tree_details)
         self.detail.treeView.selectionModel().selectionChanged.connect(self.show_method_parameter_details)
 
-
-
-        #mainLayout.addWidget(self.viewInterfaces.groupDataTypes)
-        #mainLayout.addWidget(self.viewEvents.groupDataTypes)
         self.setLayout(mainLayout)
+        mainLayout.addWidget(self.splitter1)
         self.show()
 
-    def show_method_details(self, node):
+    def show_method_details_obsolete(self, node):
         itemlist = node.getElementsByTagName('ARGUMENT-DATA-PROTOTYPE')
         for s in itemlist:
             self.detail.add(getShortName(s), getDirection(s), getType(s), getNameSpace(s), s)
@@ -87,6 +76,11 @@ class App(QWidget):
             error_number = self.model_tree.get_application_error_value(error_name)
             self.errorlist.add(error_name, error_number)
             pass
+
+    def show_method_details(self, node):
+        self.detail.clear_method()
+        self.detail.show_method(node, self.detail.model)
+        self.detail.treeView.expandAll()
 
     def show_datatype_details(self, node):
         self.detail.clear_data_type()
@@ -133,12 +127,23 @@ class App(QWidget):
     def parseXML(self, file):
         self.xmldoc = minidom.parse(file)
         itemlist = self.xmldoc.getElementsByTagName('IMPLEMENTATION-DATA-TYPE')
+        last_type_namespace = ''
         for s in itemlist:
-            self.model_tree.add(self.model_tree.node_datatypes, getShortName(s), getCategory(s), file, getNameSpace(s), s)
+            type_namespace = getNameSpace(s)
+            if last_type_namespace != type_namespace:
+                type_parent_node = self.model_tree.add(self.model_tree.node_datatypes, type_namespace, '', file, '', s)
+                last_type_namespace = type_namespace
+            self.model_tree.add(type_parent_node, getShortName(s), getCategory(s), '', '', s)
 
         itemlist = self.xmldoc.getElementsByTagName('APPLICATION-ERROR')
+        last_error_namespace = ''
         for s in itemlist:
-            self.model_tree.add(self.model_tree.node_application_errors, getShortName(s), getXmlErrorCode(s), file, getNameSpace(s), s)
+            error_namespace = getNameSpace(s)
+            if last_error_namespace != error_namespace:
+                error_parent_node = self.model_tree.add(self.model_tree.node_application_errors, error_namespace, '', file, '', s)
+                last_error_namespace = error_namespace
+
+            self.model_tree.add(error_parent_node, getShortName(s), getXmlErrorCode(s), '', '', s)
     
         itemlist = self.xmldoc.getElementsByTagName('SOMEIP-SERVICE-INTERFACE-DEPLOYMENT')
         for s in itemlist:
@@ -162,10 +167,10 @@ class App(QWidget):
         for service_interface in service_interface_list:
             service_interface_node = self.model_tree.add(self.model_tree.node_interfaces, getShortName(service_interface), 'SERVICE-INTERFACE', file, getNameSpace(service_interface), service_interface)
             # add methods
-            methods_node = self.model_tree.add(service_interface_node, 'METHODS', '', '', '')
             method_list = service_interface.getElementsByTagName('CLIENT-SERVER-OPERATION')
+            methods_node = self.model_tree.add(service_interface_node, 'METHODS', '', '', getNameSpace(service_interface) + '/' + getShortName(service_interface))
             for method in method_list:
-                self.model_tree.add(methods_node, getShortName(method), "CLIENT-SERVER-OPERATION", file, getNameSpace(method), method)
+                self.model_tree.add(methods_node, getShortName(method), "CLIENT-SERVER-OPERATION", '', '', method)
             # add events
             events_node = self.model_tree.add(service_interface_node, 'EVENTS', '', '', '')
             event_list = self.xmldoc.getElementsByTagName('VARIABLE-DATA-PROTOTYPE')
