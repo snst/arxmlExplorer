@@ -26,7 +26,7 @@ class ModelTreeView():
         self.treeView.setModel(self.model)
         self.treeView.setColumnWidth(0, 350)
         self.treeView.setColumnWidth(2, 250)
-        self.addModelRootNodes()
+        #self.addModelRootNodes()
         pass
 
     def addModelRootNodes(self):

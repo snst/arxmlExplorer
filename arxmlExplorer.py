@@ -16,7 +16,12 @@ from arxmlHelper import *
 from MethodErrorListWidget import *
 from NamespaceCache import *
 from ErrorItem import *
-
+from DatatypeItem import *
+from MethodItem import *
+from EventItem import *
+from FieldItem import *
+from MachineItem import *
+from DeploymentItem import *
 
 class App(QWidget):
   
@@ -27,12 +32,6 @@ class App(QWidget):
         self.top = 10
         self.width = 800
         self.height = 700
-        self.cache_datatypes = NamespaceCache()
-        self.cache_errors = NamespaceCache()
-        self.cache_methods = NamespaceCache()
-        self.cache_events = NamespaceCache()
-        self.cache_fields = NamespaceCache()
-        #self.error_items = ErrorItem()
         self.initUI()
         path = './models/demo3'
         files = [f for f in os.listdir(path) if os.path.isfile(path + '/' + f)]
@@ -71,6 +70,14 @@ class App(QWidget):
         self.setLayout(mainLayout)
         mainLayout.addWidget(self.splitter1)
         self.show()
+        self.items_error = ErrorItem('APPLICATION-ERROR', 'Errors', self.model_tree.model)
+        self.items_datatype = DatatypeItem('IMPLEMENTATION-DATA-TYPE', 'Data types', self.model_tree.model)
+        self.items_method = MethodItem('CLIENT-SERVER-OPERATION', 'Methods', self.model_tree.model)
+        self.items_event = EventItem('VARIABLE-DATA-PROTOTYPE', 'Events', self.model_tree.model)
+        self.items_field = FieldItem('FIELD', 'Fields', self.model_tree.model)
+        self.items_machine = MachineItem('MACHINE', 'Machine', self.model_tree.model)
+        self.items_deployment = DeploymentItem('SOMEIP-SERVICE-INTERFACE-DEPLOYMENT', 'Deployment', self.model_tree.model)
+
 
     def show_details_method_obsolete(self, node):
         itemlist = node.getElementsByTagName('ARGUMENT-DATA-PROTOTYPE')
@@ -131,61 +138,15 @@ class App(QWidget):
         str = node.toprettyxml(indent=' ', newl='')
         self.plaintext_xml.setPlainText(str)
 
-    def get_namespace_view_node(self, xml_node, cache, view_root_node, file):
-        namespace = getNameSpace(xml_node)
-        view_namespace_node = cache.getViewNode(namespace)
-        if not view_namespace_node:
-            view_namespace_node = self.model_tree.add(view_root_node, namespace, '', file, '', xml_node)
-            cache.addViewNode(namespace, view_namespace_node)
-        return view_namespace_node
-
-
-    def parse_datatypes(self, xml_node, file):
-        itemlist = xml_node.getElementsByTagName('IMPLEMENTATION-DATA-TYPE')
-        for s in itemlist:
-            view_node_namespace = self.get_namespace_view_node(s, self.cache_datatypes, self.model_tree.node_datatypes, file)
-            self.model_tree.add(view_node_namespace, getShortName(s), getCategory(s), '', '', s)
-
-    def parse_errors(self, xml_node, file):
-        itemlist = xml_node.getElementsByTagName('APPLICATION-ERROR')
-        for s in itemlist:
-            view_node_namespace = self.get_namespace_view_node(s, self.cache_errors, self.model_tree.node_application_errors, file)
-            self.model_tree.add(view_node_namespace, getShortName(s), getXmlErrorCode(s), '', '', s)
-
-    def parse_methods(self, xml_node, file):
-        itemlist = xml_node.getElementsByTagName('CLIENT-SERVER-OPERATION')
-        for s in itemlist:
-            view_node_namespace = self.get_namespace_view_node(s, self.cache_methods, self.model_tree.node_methods, file)
-            self.model_tree.add(view_node_namespace, getShortName(s), '', '', '', s)
-
-    def parse_events(self, xml_node, file):
-        itemlist = xml_node.getElementsByTagName('VARIABLE-DATA-PROTOTYPE')
-        for s in itemlist:
-            view_node_namespace = self.get_namespace_view_node(s, self.cache_events, self.model_tree.node_events, file)
-            self.model_tree.add(view_node_namespace, getShortName(s), '', '', '', s)
-
-    def parse_fields(self, xml_node, file):
-        itemlist = xml_node.getElementsByTagName('FIELD')
-        for s in itemlist:
-            view_node_namespace = self.get_namespace_view_node(s, self.cache_fields, self.model_tree.node_fields, file)
-            self.model_tree.add(view_node_namespace, getShortName(s), '', '', '', s)
-
     def parseXML(self, file):
         self.xmldoc = minidom.parse(file)
-        self.parse_datatypes(self.xmldoc, file)
-        self.parse_errors(self.xmldoc, file)
-        self.parse_methods(self.xmldoc, file)
-        self.parse_fields(self.xmldoc, file)
-        self.parse_events(self.xmldoc, file)
-
-    
-        itemlist = self.xmldoc.getElementsByTagName('SOMEIP-SERVICE-INTERFACE-DEPLOYMENT')
-        for s in itemlist:
-            self.model_tree.add(self.model_tree.node_deployment, getShortName(s), '', file, getNameSpace(s), s)
-    
-        itemlist = self.xmldoc.getElementsByTagName('MACHINE')
-        for s in itemlist:
-            self.model_tree.add(self.model_tree.node_machine, getShortName(s), '', file, getNameSpace(s), s)
+        self.items_error.parse(self.xmldoc, file)
+        self.items_datatype.parse(self.xmldoc, file)
+        self.items_method.parse(self.xmldoc, file)
+        self.items_event.parse(self.xmldoc, file)
+        self.items_field.parse(self.xmldoc, file)
+        self.items_machine.parse(self.xmldoc, file)
+        self.items_deployment.parse(self.xmldoc, file)
     
 
 if __name__ == '__main__':

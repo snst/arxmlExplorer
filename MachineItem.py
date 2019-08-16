@@ -13,7 +13,7 @@ QWidget, QPushButton, QDialog, QPlainTextEdit, QTabWidget)
 from xml.dom import minidom
 from BaseItem import *
 
-class ErrorItem(BaseItem):
+class MachineItem(BaseItem):
     def __init__(self, xml_name, view_name, view_root_node):
         BaseItem.__init__(self, xml_name, view_name, view_root_node)
         pass
@@ -21,7 +21,7 @@ class ErrorItem(BaseItem):
     def add(self, parent, xml_node):
         name = getShortName(xml_node)
         item = QStandardItem(name)
-        parent.appendRow([item, QStandardItem(getXmlErrorCode(xml_node)), QStandardItem(''), QStandardItem('')])
+        parent.appendRow([item, QStandardItem(''), QStandardItem(''), QStandardItem('')])
         if xml_node != None:
             item.setData(xml_node, Qt.UserRole + 1)
             pass

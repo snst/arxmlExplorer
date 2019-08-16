@@ -12,19 +12,21 @@ QGroupBox, QHBoxLayout, QLabel, QLineEdit, QTreeView, QVBoxLayout,
 QWidget, QPushButton, QDialog, QPlainTextEdit, QTabWidget)
 from xml.dom import minidom
 from NamespaceCache import *
+from arxmlHelper import *
 
 class BaseItem():
-    def __init__(self, xml_name, view_root_node):
+    def __init__(self, xml_name, view_name, view_root_node):
         self.cache = NamespaceCache()
         self.xml_name = xml_name
-        self.view_root_node = view_root_node
+        self.view_root_node = QStandardItem(view_name)
+        view_root_node.appendRow(self.view_root_node)
         pass
 
     def get_namespace_view_node(self, xml_node, file):
         namespace = getNameSpace(xml_node)
         view_namespace_node = self.cache.getViewNode(namespace)
         if not view_namespace_node:
-            view_namespace_node = self.model_tree.add(self.view_root_node, namespace, '', file, '', xml_node)
+            view_namespace_node = self.add_namespace(self.view_root_node, namespace, file, xml_node)
             self.cache.addViewNode(namespace, view_namespace_node)
         return view_namespace_node
 
@@ -33,12 +35,15 @@ class BaseItem():
         itemlist = xml_root_node.getElementsByTagName(self.xml_name)
         for s in itemlist:
             view_node_namespace = self.get_namespace_view_node(s, file)
-            self.add(view_node_namespace, getShortName(s), '', '', '', s)
+            self.add(view_node_namespace, s)
 
-    def add(self, parent, name, value, namespace='', source='', xml_node = None):
-        item = QStandardItem(name)
-        parent.appendRow([item, QStandardItem(value), QStandardItem(namespace), QStandardItem(source)])
+    def add_namespace(self, parent, namespace, file, xml_node):
+        item = QStandardItem(namespace)
+        parent.appendRow([item, QStandardItem(''), QStandardItem(''), QStandardItem(file)])
         if xml_node != None:
             item.setData(xml_node, Qt.UserRole + 1)
             pass
         return item
+
+
+
