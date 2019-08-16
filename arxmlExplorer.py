@@ -33,7 +33,7 @@ class App(QWidget):
         self.width = 800
         self.height = 700
         self.initUI()
-        path = './models/demo3'
+        path = './models/demo2'
         files = [f for f in os.listdir(path) if os.path.isfile(path + '/' + f)]
         for f in files:
             if f.endswith('.arxml'):
