@@ -56,10 +56,6 @@ class App(QWidget):
         self.splitter1.addWidget(self.tabs)
 
         mainLayout = QVBoxLayout()
-        #mainLayout.addWidget(self.model_tree.groupDataTypes)
-        #mainLayout.addWidget(self.detail.groupDataTypes)
-        #mainLayout.addWidget(self.tabs)
-
         self.tabs.addTab(self.plaintext_xml,"XML")
         self.tabs.addTab(self.combo,"Details")
         self.tabs.addTab(self.errorlist.groupDataTypes, "Possible Errors")
@@ -77,31 +73,8 @@ class App(QWidget):
         self.items_field = FieldItem('FIELD', 'Fields', self.model_tree.model)
         self.items_machine = MachineItem('MACHINE', 'Machine', self.model_tree.model)
         self.items_deployment = DeploymentItem('SOMEIP-SERVICE-INTERFACE-DEPLOYMENT', 'Deployment', self.model_tree.model)
+        self.items = [self.items_error, self.items_datatype, self.items_method, self.items_event, self.items_field, self.items_machine, self.items_deployment]
 
-
-    def show_details_method_obsolete(self, node):
-        itemlist = node.getElementsByTagName('ARGUMENT-DATA-PROTOTYPE')
-        for s in itemlist:
-            self.detail.add(getShortName(s), getDirection(s), getType(s), getNameSpace(s), s)
-
-        self.errorlist.clear()
-        itemlist = node.getElementsByTagName('POSSIBLE-ERROR-REF')
-        for s in itemlist:
-            error_name = getXmlContent(s)
-            error_number = self.model_tree.get_application_error_value(error_name)
-            self.errorlist.add(error_name, error_number)
-            pass
-
-    def show_details_method(self, node):
-        self.detail.clear_method()
-        self.detail.show_method(node, self.detail.model)
-        self.detail.treeView.expandAll()
-
-    def show_details_datatype(self, node):
-        self.detail.clear_data_type()
-        self.detail.show_datatype(node, self.detail.model)
-        self.detail.treeView.expandAll()
-        pass
                     
     def show_model_tree_details(self, selected, deselected):
         a = self.model_tree.treeView.selectedIndexes()[0]
@@ -111,11 +84,10 @@ class App(QWidget):
         self.detail.clear()
         if b != None:
             self.show_xml(b)
-            if b.localName == 'CLIENT-SERVER-OPERATION':
-                self.show_details_method(b)
-            elif b.localName == 'IMPLEMENTATION-DATA-TYPE':
-                self.show_details_datatype(b)
-    
+            for item in self.items:
+                if item.show_detail(self.detail, b):
+                    break
+
     def show_method_parameter_details(self, selected, deselected):
         a = self.model_tree.treeView.selectedIndexes()[0]
         print(a.data(Qt.DisplayRole))
@@ -138,16 +110,11 @@ class App(QWidget):
         str = node.toprettyxml(indent=' ', newl='')
         self.plaintext_xml.setPlainText(str)
 
+
     def parseXML(self, file):
         self.xmldoc = minidom.parse(file)
-        self.items_error.parse(self.xmldoc, file)
-        self.items_datatype.parse(self.xmldoc, file)
-        self.items_method.parse(self.xmldoc, file)
-        self.items_event.parse(self.xmldoc, file)
-        self.items_field.parse(self.xmldoc, file)
-        self.items_machine.parse(self.xmldoc, file)
-        self.items_deployment.parse(self.xmldoc, file)
-    
+        for item in self.items:
+            item.parse(self.xmldoc, file)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

@@ -64,6 +64,10 @@ def getDirection(node):
     val = getValueByName(node, 'DIRECTION')
     return val
 
+def getFireAndForget(node):
+    val = getValueByName(node, 'FIRE-AND-FORGET')
+    return val
+
 def getXmlImplementationDataTypeRef(node):
     val = getValueByNameDeep(node, 'IMPLEMENTATION-DATA-TYPE-REF')
     return val

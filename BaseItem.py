@@ -45,5 +45,25 @@ class BaseItem():
             pass
         return item
 
+    def attach_xml_node(self, item, xml_node):
+        if xml_node != None:
+            item.setData(xml_node, Qt.UserRole + 1)
+            pass
 
+    def show_detail(self, view, node):
+        if node.localName != self.xml_name:
+            return False
+        self.show_detail_impl(view, node)
+        return True
 
+    def add_row_detail(self, parent, name, a, b=None, xml_node = None):
+        item = QStandardItem(name)
+        row = [item, QStandardItem(a)]
+        if b:
+            row.append(QStandardItem(b))
+        parent.appendRow(row)
+        self.attach_xml_node(item, xml_node)
+        return item
+
+    def show_detail_impl(self, view, node):
+        pass
