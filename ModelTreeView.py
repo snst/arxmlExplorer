@@ -24,7 +24,7 @@ class ModelTreeView():
         self.groupDataTypes.setLayout(dataLayout)
         self.model = self.createModelDataTypes(self)
         self.treeView.setModel(self.model)
-        self.treeView.setColumnWidth(0, 250)
+        self.treeView.setColumnWidth(0, 350)
         self.treeView.setColumnWidth(2, 250)
         self.addModelRootNodes()
         pass
@@ -40,12 +40,18 @@ class ModelTreeView():
         self.model.appendRow(self.node_deployment)
         self.node_machine = QStandardItem('Machine' )
         self.model.appendRow(self.node_machine)
+        self.node_methods = QStandardItem('Methods' )
+        self.model.appendRow(self.node_methods)
+        self.node_events = QStandardItem('Events' )
+        self.model.appendRow(self.node_events)
+        self.node_fields = QStandardItem('Fields' )
+        self.model.appendRow(self.node_fields)
 
     def createModelDataTypes(self,parent):
         model = QStandardItemModel(0, 4, None)
         model.setHeaderData(0, Qt.Horizontal, "Name")
-        model.setHeaderData(1, Qt.Horizontal, "Category")
-        model.setHeaderData(2, Qt.Horizontal, "namespace")
+        model.setHeaderData(1, Qt.Horizontal, "Value")
+        model.setHeaderData(2, Qt.Horizontal, "")
         model.setHeaderData(3, Qt.Horizontal, "Source")
         return model
     
