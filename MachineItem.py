@@ -22,7 +22,5 @@ class MachineItem(BaseItem):
         name = getShortName(xml_node)
         item = QStandardItem(name)
         parent.appendRow([item, QStandardItem(''), QStandardItem(''), QStandardItem('')])
-        if xml_node != None:
-            item.setData(xml_node, Qt.UserRole + 1)
-            pass
+        self.attach_xml_node(item, xml_node)
         return item    

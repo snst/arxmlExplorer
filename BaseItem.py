@@ -40,10 +40,12 @@ class BaseItem():
     def add_namespace(self, parent, namespace, file, xml_node):
         item = QStandardItem(namespace)
         parent.appendRow([item, QStandardItem(''), QStandardItem(''), QStandardItem(file)])
-        if xml_node != None:
-            item.setData(xml_node, Qt.UserRole + 1)
-            pass
+        self.attach_xml_node(item, xml_node)
+        self.attach_type(item, 'NS')
         return item
+
+    def attach_type(self, item, str):
+        item.setData(str, Qt.UserRole + 2)
 
     def attach_xml_node(self, item, xml_node):
         if xml_node != None:

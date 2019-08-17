@@ -12,40 +12,54 @@ QGroupBox, QHBoxLayout, QLabel, QLineEdit, QTreeView, QVBoxLayout,
 QWidget, QPushButton, QDialog, QPlainTextEdit, QTabWidget)
 from xml.dom import minidom
 
+class MyFilter(QSortFilterProxyModel):
+    def __init__(self):
+        QSortFilterProxyModel.__init__(self)
+        self.str_filter = ''
+        pass
+
+    def filterAcceptsRow (self, source_row, source_parent):
+        index0 = self.sourceModel().index(source_row, 0, source_parent);
+        str = self.sourceModel().data(index0)
+        ns = index0.data(Qt.UserRole + 2)
+        arg_node = source_parent.data(Qt.UserRole + 1)
+        c = True
+        if not self.str_filter=='' and ns == 'NS':
+            if not self.str_filter in str:
+                c = False
+        #a = self.sourceModel()
+        return c
 
 class ModelTreeView():
     def __init__(self):
         self.groupDataTypes = QGroupBox('Model')
+        self.textbox_filter = QLineEdit()
+        self.textbox_filter.returnPressed.connect(self.on_filter_updated)
         self.treeView = QTreeView()
         #self.treeView.setRootIsDecorated(False)
         self.treeView.setAlternatingRowColors(True)
-        dataLayout = QHBoxLayout()
+        dataLayout = QVBoxLayout()
+        dataLayout.addWidget(self.textbox_filter)
         dataLayout.addWidget(self.treeView)
         self.groupDataTypes.setLayout(dataLayout)
+
         self.model = self.createModelDataTypes(self)
-        self.treeView.setModel(self.model)
+        self.proxyModel = MyFilter()
+        self.proxyModel.setDynamicSortFilter(True)
+        self.proxyModel.setSourceModel(self.model)
+
+        self.treeView.setModel(self.proxyModel)
         self.treeView.setColumnWidth(0, 350)
         self.treeView.setColumnWidth(2, 250)
-        #self.addModelRootNodes()
         pass
 
-    def addModelRootNodes(self):
-        self.node_datatypes = QStandardItem('Data Types' )
-        self.model.appendRow(self.node_datatypes)
-        self.node_application_errors = QStandardItem('Application Errors' )
-        self.model.appendRow(self.node_application_errors)
-        self.node_interfaces = QStandardItem('Interfaces' )
-        self.model.appendRow(self.node_interfaces)
-        self.node_deployment = QStandardItem('Deployment' )
-        self.model.appendRow(self.node_deployment)
-        self.node_machine = QStandardItem('Machine' )
-        self.model.appendRow(self.node_machine)
-        self.node_methods = QStandardItem('Methods' )
-        self.model.appendRow(self.node_methods)
-        self.node_events = QStandardItem('Events' )
-        self.model.appendRow(self.node_events)
-        self.node_fields = QStandardItem('Fields' )
-        self.model.appendRow(self.node_fields)
+    def on_filter_updated(self):
+        str = self.textbox_filter.text()
+        self.update_filter(str)
+
+    def update_filter(self, str_filter):
+        self.proxyModel.str_filter = str_filter
+        self.proxyModel.invalidateFilter()
 
     def createModelDataTypes(self,parent):
         model = QStandardItemModel(0, 4, None)
@@ -58,9 +72,7 @@ class ModelTreeView():
     def add(self, parent, name, category, source, namespace='', xml_node = None):
         item = QStandardItem(name)
         parent.appendRow([item, QStandardItem(category), QStandardItem(namespace), QStandardItem(source)])
-        if xml_node != None:
-            item.setData(xml_node, Qt.UserRole + 1)
-            pass
+        self.attach_xml_node(item, xml_node)
         return item
 
     def get_application_error_value(self, name):
