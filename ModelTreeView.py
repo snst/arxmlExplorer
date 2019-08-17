@@ -51,6 +51,9 @@ class ModelTreeView():
         self.treeView.setModel(self.proxyModel)
         self.treeView.setColumnWidth(0, 350)
         self.treeView.setColumnWidth(2, 250)
+
+        self.root_node_model = QStandardItem('Model')
+        self.model.appendRow(self.root_node_model)
         pass
 
     def on_filter_updated(self):
