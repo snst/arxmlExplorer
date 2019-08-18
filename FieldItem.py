@@ -26,24 +26,24 @@ class FieldItem(BaseItem):
         return item    
 
 
-    def show_detail_impl(self, view, node):
-        self.tree_view = view.treeView
-        self.clear_detail(view)
-        self.show_detail_data(node, view.model)
-        view.treeView.expandAll()
+    def show_detail_impl(self, my_tree, xml_node):
+        self.tree_view = my_tree.treeView
+        self.clear_detail(my_tree)
+        self.show_detail_data(my_tree.model, xml_node)
+        my_tree.treeView.expandAll()
 
 
-    def show_detail_data(self, node, model):
-        item = self.add_row_detail(model, 'TYPE-TREF', getType(node))
-        item = self.add_row_detail(model, 'HAS-GETTER', getValueByName(node, 'HAS-GETTER'))
-        item = self.add_row_detail(model, 'HAS-NOTIFIER', getValueByName(node, 'HAS-NOTIFIER'))
-        item = self.add_row_detail(model, 'HAS-SETTER', getValueByName(node, 'HAS-SETTER'))
+    def show_detail_data(self, view_node, xml_node):
+        item = self.add_row_detail(view_node, 'TYPE-TREF', getType(xml_node))
+        item = self.add_row_detail(view_node, 'HAS-GETTER', getValueByName(xml_node, 'HAS-GETTER'))
+        item = self.add_row_detail(view_node, 'HAS-NOTIFIER', getValueByName(xml_node, 'HAS-NOTIFIER'))
+        item = self.add_row_detail(view_node, 'HAS-SETTER', getValueByName(xml_node, 'HAS-SETTER'))
 
 
-    def clear_detail(self, view):
-        view.model = QStandardItemModel(0, 2, None)
-        view.model.setHeaderData(0, Qt.Horizontal, 'Name')
-        view.model.setHeaderData(1, Qt.Horizontal, 'Value')
-        view.treeView.setModel(view.model)
-        view.treeView.setColumnWidth(0, 100)
+    def clear_detail(self, my_tree):
+        my_tree.model = QStandardItemModel(0, 2, None)
+        my_tree.model.setHeaderData(0, Qt.Horizontal, 'Name')
+        my_tree.model.setHeaderData(1, Qt.Horizontal, 'Value')
+        my_tree.treeView.setModel(my_tree.model)
+        my_tree.treeView.setColumnWidth(0, 100)
         pass     

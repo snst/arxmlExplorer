@@ -33,7 +33,7 @@ class App(QWidget):
         self.width = 800
         self.height = 700
         self.initUI()
-        path = './models/demo3'
+        path = './models/demo5'
         files = [f for f in os.listdir(path) if os.path.isfile(path + '/' + f)]
         for f in files:
             if f.endswith('.arxml'):
@@ -61,7 +61,7 @@ class App(QWidget):
         self.tabs.addTab(self.errorlist.groupDataTypes, "Possible Errors")
 
         self.model_tree.treeView.selectionModel().selectionChanged.connect(self.show_model_tree_details)
-        self.detail.treeView.selectionModel().selectionChanged.connect(self.show_method_parameter_details)
+#        self.detail.treeView.selectionModel().selectionChanged.connect(self.show_method_parameter_details)
 
         self.setLayout(mainLayout)
         mainLayout.addWidget(self.splitter1)
@@ -79,20 +79,30 @@ class App(QWidget):
     def show_model_tree_details(self, selected, deselected):
         a = self.model_tree.treeView.selectedIndexes()[0]
         #print(a.data(Qt.DisplayRole))
-        b = a.data(Qt.UserRole + 1)
+        xml_node = a.data(Qt.UserRole + 1)
         #print(b)
         self.detail.clear()
-        if b != None:
-            self.show_xml(b)
+        if xml_node != None:
+            self.show_xml(xml_node)
             for item in self.items:
-                if item.show_detail(self.detail, b):
-                    break
+                if item.show_detail(self.detail, xml_node):
+                    return
+            if xml_node.localName == 'EVENT-DEPLOYMENTS':
+                self.items_deployment.show_detail_events(self.detail, xml_node)
+            elif xml_node.localName == 'EVENT-GROUPS':
+                self.items_deployment.show_detail_event_groups(self.detail, xml_node)
+            elif xml_node.localName == 'FIELD-DEPLOYMENTS':
+                self.items_deployment.show_detail_fields(self.detail, xml_node)
+            elif xml_node.localName == 'METHOD-DEPLOYMENTS':
+                self.items_deployment.show_detail_methods(self.detail, xml_node)
+        self.detail.treeView.selectionModel().selectionChanged.connect(self.show_method_parameter_details)
+
 
     def show_method_parameter_details(self, selected, deselected):
         a = self.model_tree.treeView.selectedIndexes()[0]
-        print(a.data(Qt.DisplayRole))
+        #print(a.data(Qt.DisplayRole))
         b = a.data(Qt.UserRole + 1)
-        print(b)
+        #print(b)
 
         arg = self.detail.treeView.selectedIndexes()[0]
         print(arg.data(Qt.DisplayRole))
@@ -100,10 +110,10 @@ class App(QWidget):
         print(arg_node)
         self.show_xml(arg_node)
 
-        self.combo.edit_name.setText(getShortName(arg_node))
+        """self.combo.edit_name.setText(getShortName(arg_node))
         dir_index = self.combo.cb_dir.findText(getDirection(arg_node))
         if dir_index >= 0:
-            self.combo.cb_dir.setCurrentIndex(dir_index)
+            self.combo.cb_dir.setCurrentIndex(dir_index)"""
 
 
     def show_xml(self, node):

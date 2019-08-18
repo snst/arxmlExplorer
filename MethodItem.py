@@ -25,11 +25,11 @@ class MethodItem(BaseItem):
         self.attach_xml_node(item, xml_node)
         return item    
 
-    def show_detail_impl(self, view, node):
-        self.tree_view = view.treeView
-        self.clear_detail(view)
-        self.show_method(node, view.model)
-        view.treeView.expandAll()
+    def show_detail_impl(self, my_tree, node):
+        self.tree_view = my_tree.treeView
+        self.clear_detail(my_tree)
+        self.show_method(node, my_tree.model)
+        my_tree.treeView.expandAll()
 
 
     def show_method_param(self, node, parent):
@@ -69,13 +69,13 @@ class MethodItem(BaseItem):
         for s in itemlist:
             self.show_method_error(s, item)
 
-    def clear_detail(self, view):
-        view.model = QStandardItemModel(0, 3, None)
-        view.model.setHeaderData(0, Qt.Horizontal, "Name")
-        view.model.setHeaderData(1, Qt.Horizontal, "Value")
-        view.model.setHeaderData(2, Qt.Horizontal, "Ref Dest")
-        view.treeView.setModel(view.model)
-        view.treeView.setColumnWidth(0, 200)
-        view.treeView.setColumnWidth(1, 150)
-        #view.treeView.setColumnWidth(1, 250)
+    def clear_detail(self, my_tree):
+        my_tree.model = QStandardItemModel(0, 3, None)
+        my_tree.model.setHeaderData(0, Qt.Horizontal, "Name")
+        my_tree.model.setHeaderData(1, Qt.Horizontal, "Value")
+        my_tree.model.setHeaderData(2, Qt.Horizontal, "Ref Dest")
+        my_tree.treeView.setModel(my_tree.model)
+        my_tree.treeView.setColumnWidth(0, 200)
+        my_tree.treeView.setColumnWidth(1, 150)
+        #my_tree.treeView.setColumnWidth(1, 250)
         pass     

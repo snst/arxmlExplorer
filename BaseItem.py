@@ -52,10 +52,10 @@ class BaseItem():
             item.setData(xml_node, Qt.UserRole + 1)
             pass
 
-    def show_detail(self, view, node):
-        if node.localName != self.xml_name:
+    def show_detail(self, my_tree, xml_node):
+        if xml_node.localName != self.xml_name:
             return False
-        self.show_detail_impl(view, node)
+        self.show_detail_impl(my_tree, xml_node)
         return True
 
     def add_row_detail(self, parent, name, a, b=None, xml_node = None):
@@ -67,5 +67,23 @@ class BaseItem():
         self.attach_xml_node(item, xml_node)
         return item
 
-    def show_detail_impl(self, view, node):
+    def show_detail_impl(self, my_tree, xml_node):
         pass
+
+
+    def add_row_detail2(self, parent, arg_list, xml_node = None):
+        row = []
+        first_item = None
+        item = None
+        for arg in arg_list:
+            if type(arg) == list:
+                item = QStandardItem(arg[0])
+                item.setToolTip(arg[1])
+            else:
+                item = QStandardItem(arg)
+            if not first_item:
+                first_item = item
+            row.append(item)
+        parent.appendRow(row)
+        self.attach_xml_node(first_item, xml_node)
+        return first_item

@@ -19,6 +19,10 @@ def getValueByNameDeep(node, name):
         val = getXmlContent(n[0])
     return val
 
+def getValueByNameDeepT(node, name):
+    return [getValueByNameDeep(node, name), name]
+
+
 def findFirstChildNodeByName(parent, name):
     for node in parent.childNodes:
         if node.nodeType == Node.ELEMENT_NODE and node.tagName == name:
@@ -35,6 +39,9 @@ def getValueByName(parent, name):
     if node:
         return node.childNodes[0].nodeValue
     return None
+
+def getValueByNameT(parent, name):
+    return [getValueByName(parent, name), name]    
 
 def getDirectChildNodesByName(parent, name):
     rc = []
