@@ -16,10 +16,20 @@ class NamespaceCache():
     def __init__(self):
         self.dict = {}
         pass
-    
+
+    def addViewNode(self, namespace, view_node):
+        self.dict[namespace] = view_node
+
     def getViewNode(self, namespace):
         node = self.dict.get(namespace)
         return node
 
-    def addViewNode(self, namespace, view_node):
-        self.dict[namespace] = view_node
+    def addViewSubNode(self, namespace, view_node, sub_node_name):
+        node = QStandardItem(sub_node_name)
+        view_node.appendRow(node)
+        self.dict[namespace + '&&' + sub_node_name] = node
+        return node
+
+    def getViewSubNode(self, namespace, sub_node_name):
+        node = self.dict.get(namespace + '&&' + sub_node_name)
+        return node

@@ -15,11 +15,16 @@ from NamespaceCache import *
 from arxmlHelper import *
 
 class BaseItem():
-    def __init__(self, xml_name, view_name, view_root_node):
-        self.cache = NamespaceCache()
+    def __init__(self, xml_name, view_name, view_root_node, cache = None):
+        if cache:
+            self.cache = cache
+        else:
+            self.cache = NamespaceCache()
         self.xml_name = xml_name
-        self.view_root_node = QStandardItem(view_name)
-        view_root_node.appendRow(self.view_root_node)
+        #self.view_root_node = QStandardItem(view_name)
+        self.view_name = view_name
+        #view_root_node.appendRow(self.view_root_node)
+        self.view_root_node = view_root_node
         pass
 
     def get_namespace_view_node(self, xml_node, file):
@@ -28,7 +33,16 @@ class BaseItem():
         if not view_namespace_node:
             view_namespace_node = self.add_namespace(self.view_root_node, namespace, file, xml_node)
             self.cache.addViewNode(namespace, view_namespace_node)
-        return view_namespace_node
+            """self.cache.addViewSubNode(namespace, view_namespace_node, "Errors")
+            self.cache.addViewSubNode(namespace, view_namespace_node, "Methods")
+            self.cache.addViewSubNode(namespace, view_namespace_node, "Events")
+            self.cache.addViewSubNode(namespace, view_namespace_node, "Fields")
+            self.cache.addViewSubNode(namespace, view_namespace_node, "Data types")"""
+        node = self.cache.getViewSubNode(namespace, self.view_name)
+        if not node:
+            node = self.cache.addViewSubNode(namespace, view_namespace_node, self.view_name)
+        return node
+        #return view_namespace_node
 
 
     def parse(self, xml_root_node, file):

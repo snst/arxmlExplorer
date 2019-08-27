@@ -26,16 +26,19 @@ class DeploymentItem(BaseItem):
         self.node_methods =  QStandardItem('Methods')
         self.node_fields =  QStandardItem('Fields')
         
-        parent.appendRow([item, QStandardItem(''), QStandardItem(''), QStandardItem('')])
-        item.appendRow([self.node_methods, QStandardItem(''), QStandardItem(''), QStandardItem('')])
-        item.appendRow([self.node_fields, QStandardItem(''), QStandardItem(''), QStandardItem('')])
-        item.appendRow([self.node_events, QStandardItem(''), QStandardItem(''), QStandardItem('')])
-        item.appendRow([self.node_event_groups, QStandardItem(''), QStandardItem(''), QStandardItem('')])
-        self.attach_xml_node(item, xml_node)
-        self.attach_xml_node(self.node_methods, findFirstChildNodeByName(xml_node, 'METHOD-DEPLOYMENTS'))
-        self.attach_xml_node(self.node_fields, findFirstChildNodeByName(xml_node, 'FIELD-DEPLOYMENTS'))
-        self.attach_xml_node(self.node_events, findFirstChildNodeByName(xml_node, 'EVENT-DEPLOYMENTS'))
-        self.attach_xml_node(self.node_event_groups, findFirstChildNodeByName(xml_node, 'EVENT-GROUPS'))
+        if parent:
+            parent.appendRow([item, QStandardItem(''), QStandardItem(''), QStandardItem('')])
+            item.appendRow([self.node_methods, QStandardItem(''), QStandardItem(''), QStandardItem('')])
+            item.appendRow([self.node_fields, QStandardItem(''), QStandardItem(''), QStandardItem('')])
+            item.appendRow([self.node_events, QStandardItem(''), QStandardItem(''), QStandardItem('')])
+            item.appendRow([self.node_event_groups, QStandardItem(''), QStandardItem(''), QStandardItem('')])
+            self.attach_xml_node(item, xml_node)
+            self.attach_xml_node(self.node_methods, findFirstChildNodeByName(xml_node, 'METHOD-DEPLOYMENTS'))
+            self.attach_xml_node(self.node_fields, findFirstChildNodeByName(xml_node, 'FIELD-DEPLOYMENTS'))
+            self.attach_xml_node(self.node_events, findFirstChildNodeByName(xml_node, 'EVENT-DEPLOYMENTS'))
+            self.attach_xml_node(self.node_event_groups, findFirstChildNodeByName(xml_node, 'EVENT-GROUPS'))
+        else:
+            print("Failed to add2:" + name)
         return item    
 
     def show_detail_impl(self, my_tree, xml_node):

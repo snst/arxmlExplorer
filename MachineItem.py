@@ -19,8 +19,12 @@ class MachineItem(BaseItem):
         pass
 
     def add(self, parent, xml_node):
+        item = None
         name = getShortName(xml_node)
-        item = QStandardItem(name)
-        parent.appendRow([item, QStandardItem(''), QStandardItem(''), QStandardItem('')])
-        self.attach_xml_node(item, xml_node)
+        if parent:
+            item = QStandardItem(name)
+            parent.appendRow([item, QStandardItem(''), QStandardItem(''), QStandardItem('')])
+            self.attach_xml_node(item, xml_node)
+        else:
+            print("Failed to add:" + name)
         return item    

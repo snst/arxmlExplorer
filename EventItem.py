@@ -14,8 +14,8 @@ from xml.dom import minidom
 from BaseItem import *
 
 class EventItem(BaseItem):
-    def __init__(self, xml_name, view_name, view_root_node):
-        BaseItem.__init__(self, xml_name, view_name, view_root_node)
+    def __init__(self, xml_name, view_name, view_root_node, cache):
+        BaseItem.__init__(self, xml_name, view_name, view_root_node, cache)
         pass
 
     def add(self, parent, xml_node):

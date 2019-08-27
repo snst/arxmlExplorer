@@ -22,6 +22,7 @@ from EventItem import *
 from FieldItem import *
 from MachineItem import *
 from DeploymentItem import *
+from NamespaceCache import *
 
 class App(QWidget):
   
@@ -32,6 +33,7 @@ class App(QWidget):
         self.top = 10
         self.width = 800
         self.height = 700
+        self.model_cache = NamespaceCache()
         self.initUI()
         path = './models/demo5'
         files = [f for f in os.listdir(path) if os.path.isfile(path + '/' + f)]
@@ -66,11 +68,11 @@ class App(QWidget):
         self.setLayout(mainLayout)
         mainLayout.addWidget(self.splitter1)
         self.show()
-        self.items_error = ErrorItem('APPLICATION-ERROR', 'Errors', self.model_tree.root_node_model)
+        self.items_error = ErrorItem('APPLICATION-ERROR', 'Errors', self.model_tree.root_node_model, self.model_cache)
         self.items_datatype = DatatypeItem('IMPLEMENTATION-DATA-TYPE', 'Data types', self.model_tree.root_node_model)
-        self.items_method = MethodItem('CLIENT-SERVER-OPERATION', 'Methods', self.model_tree.root_node_model)
-        self.items_event = EventItem('VARIABLE-DATA-PROTOTYPE', 'Events', self.model_tree.root_node_model)
-        self.items_field = FieldItem('FIELD', 'Fields', self.model_tree.root_node_model)
+        self.items_method = MethodItem('CLIENT-SERVER-OPERATION', 'Methods', self.model_tree.root_node_model, self.model_cache)
+        self.items_event = EventItem('VARIABLE-DATA-PROTOTYPE', 'Events', self.model_tree.root_node_model, self.model_cache)
+        self.items_field = FieldItem('FIELD', 'Fields', self.model_tree.root_node_model, self.model_cache)
         self.items_machine = MachineItem('MACHINE', 'Machine', self.model_tree.model)
         self.items_deployment = DeploymentItem('SOMEIP-SERVICE-INTERFACE-DEPLOYMENT', 'Deployment', self.model_tree.model)
         self.items = [self.items_error, self.items_datatype, self.items_method, self.items_event, self.items_field, self.items_machine, self.items_deployment]
