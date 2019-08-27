@@ -54,6 +54,8 @@ class ModelTreeView():
 
         self.root_node_model = QStandardItem('Model')
         self.model.appendRow(self.root_node_model)
+        self.root_node_deployment = QStandardItem('Deployment')
+        self.model.appendRow(self.root_node_deployment)
         pass
 
     def on_filter_updated(self):
