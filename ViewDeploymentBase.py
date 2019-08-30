@@ -11,22 +11,22 @@ from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QGridLayout,
 QGroupBox, QHBoxLayout, QLabel, QLineEdit, QTreeView, QVBoxLayout,
 QWidget, QPushButton, QDialog, QPlainTextEdit, QTabWidget)
 from xml.dom import minidom
-from BaseItem import *
+from ViewBase import *
 
-class ViewDeploymentBase(BaseItem):
+class ViewDeploymentBase(ViewBase):
     def __init__(self, xml_name, view_name, view_root_node, cache):
-        BaseItem.__init__(self, xml_name, view_name, view_root_node, cache)
+        ViewBase.__init__(self, xml_name, view_name, view_root_node, cache)
         pass
 
     def parse(self, xml_root_node, file):
-        itemlist = xml_root_node.getElementsByTagName(self.xml_name)
+        itemlist = xml_root_node.getElementsByTagName(self.xml_tag_name)
         for s in itemlist:
             view_node_namespace = self.get_namespace_view_node(s, file)
             self.add(view_node_namespace, s)
 
     def parse2(self, xml_root_node, parent_view_node):
 
-        itemlist = xml_root_node.getElementsByTagName(self.xml_name)
+        itemlist = xml_root_node.getElementsByTagName(self.xml_tag_name)
         if itemlist:
             sub_item = QStandardItem(self.view_name)
             parent_view_node.appendRow([sub_item, QStandardItem(''), QStandardItem(''), QStandardItem('')])

@@ -11,16 +11,20 @@ from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QGridLayout,
 QGroupBox, QHBoxLayout, QLabel, QLineEdit, QTreeView, QVBoxLayout,
 QWidget, QPushButton, QDialog, QPlainTextEdit, QTabWidget)
 from xml.dom import minidom
-from BaseItem import *
+from ViewBase import *
 
-class ErrorItem(BaseItem):
-    def __init__(self, xml_name, view_name, view_root_node, cache):
-        BaseItem.__init__(self, xml_name, view_name, view_root_node, cache)
+class ViewMachine(ViewBase):
+    def __init__(self, view_root_node):
+        ViewBase.__init__(self, 'MACHINE', 'Machine', view_root_node)
         pass
 
     def add(self, parent, xml_node):
+        item = None
         name = getShortName(xml_node)
-        item = QStandardItem(name)
-        parent.appendRow([item, QStandardItem(getXmlErrorCode(xml_node)), QStandardItem(''), QStandardItem('')])
-        attach_xml_node(item, xml_node)
+        if parent:
+            item = QStandardItem(name)
+            parent.appendRow([item, QStandardItem(''), QStandardItem(''), QStandardItem('')])
+            attach_xml_node(item, xml_node)
+        else:
+            print("Failed to add:" + name)
         return item    

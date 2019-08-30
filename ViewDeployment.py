@@ -11,7 +11,7 @@ from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QGridLayout,
 QGroupBox, QHBoxLayout, QLabel, QLineEdit, QTreeView, QVBoxLayout,
 QWidget, QPushButton, QDialog, QPlainTextEdit, QTabWidget)
 from xml.dom import minidom
-from BaseItem import *
+from ViewBase import *
 from ViewDeploymentBase import *
 from ViewDeploymentMethod import *
 from ViewDeploymentField import *
@@ -20,13 +20,13 @@ from ViewDeploymentEventGroup import *
 from NamespaceCache import *
 
 
-class ViewDeployment(BaseItem):
-    def __init__(self, xml_name, view_name, view_root_node, cache):
-        BaseItem.__init__(self, xml_name, view_name, view_root_node, cache)
-        self.view_deployment_method = ViewDeploymentMethod('SOMEIP-METHOD-DEPLOYMENT', 'Methods', view_root_node, cache)
-        self.view_deployment_field = ViewDeploymentField('SOMEIP-FIELD-DEPLOYMENT', 'Fields', view_root_node, cache)
-        self.view_deployment_event = ViewDeploymentEvent('SOMEIP-EVENT-DEPLOYMENT', 'Events', view_root_node, cache)
-        self.view_deployment_event_group = ViewDeploymentEventGroup('SOMEIP-EVENT-GROUP', 'Event Groups', view_root_node, cache)
+class ViewDeployment(ViewBase):
+    def __init__(self, view_root_node, cache):
+        ViewBase.__init__(self, 'SOMEIP-SERVICE-INTERFACE-DEPLOYMENT', None, view_root_node, cache)
+        self.view_deployment_method = ViewDeploymentMethod(view_root_node, cache)
+        self.view_deployment_field = ViewDeploymentField(view_root_node, cache)
+        self.view_deployment_event = ViewDeploymentEvent(view_root_node, cache)
+        self.view_deployment_event_group = ViewDeploymentEventGroup(view_root_node, cache)
         pass
 
     def show_detail_methods(self, model, xml_node):
@@ -76,7 +76,7 @@ class ViewDeployment(BaseItem):
         if self.view_deployment_method.show_detail(my_tree, xml_node):
             return True
 
-        if xml_node.localName != self.xml_name:
+        if xml_node.localName != self.xml_tag_name:
             return False
         self.show_detail_impl(my_tree, xml_node)
         return True

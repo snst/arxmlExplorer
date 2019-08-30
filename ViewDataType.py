@@ -11,11 +11,11 @@ from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QGridLayout,
 QGroupBox, QHBoxLayout, QLabel, QLineEdit, QTreeView, QVBoxLayout,
 QWidget, QPushButton, QDialog, QPlainTextEdit, QTabWidget)
 from xml.dom import minidom
-from BaseItem import *
+from ViewBase import *
 
-class DatatypeItem(BaseItem):
-    def __init__(self, xml_name, view_name, view_root_node):
-        BaseItem.__init__(self, xml_name, view_name, view_root_node)
+class ViewDataType(ViewBase):
+    def __init__(self, view_root_node):
+        ViewBase.__init__(self, 'IMPLEMENTATION-DATA-TYPE', 'Data Types', view_root_node)
         pass
 
     def add(self, parent, xml_node):

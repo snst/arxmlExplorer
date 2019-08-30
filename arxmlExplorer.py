@@ -15,12 +15,12 @@ from MethodArgumentsTreeView import *
 from arxmlHelper import *
 from MethodErrorListWidget import *
 from NamespaceCache import *
-from ErrorItem import *
-from DatatypeItem import *
-from MethodItem import *
-from EventItem import *
-from FieldItem import *
-from MachineItem import *
+from ViewError import *
+from ViewDataType import *
+from ViewMethod import *
+from ViewEvent import *
+from ViewField import *
+from ViewMachine import *
 from ViewDeployment import *
 from NamespaceCache import *
 
@@ -35,12 +35,14 @@ class App(QWidget):
         self.height = 700
         self.model_cache = NamespaceCache()
         self.deploy_cache = NamespaceCache()
+        self.views = []
         self.initUI()
         path = './models/demo5'
         files = [f for f in os.listdir(path) if os.path.isfile(path + '/' + f)]
         for f in files:
             if f.endswith('.arxml'):
                 self.parseXML(path + '/' + f)
+
 
     def initUI(self):
         self.setWindowTitle(self.title)
@@ -60,56 +62,37 @@ class App(QWidget):
 
         mainLayout = QVBoxLayout()
         self.tabs.addTab(self.plaintext_xml,"XML")
-        self.tabs.addTab(self.combo,"Details")
-        self.tabs.addTab(self.errorlist.groupDataTypes, "Possible Errors")
+        #self.tabs.addTab(self.combo,"Details")
+        #self.tabs.addTab(self.errorlist.groupDataTypes, "Possible Errors")
 
         self.model_tree.treeView.selectionModel().selectionChanged.connect(self.show_model_tree_details)
-#        self.detail.treeView.selectionModel().selectionChanged.connect(self.show_method_parameter_details)
 
         self.setLayout(mainLayout)
         mainLayout.addWidget(self.splitter1)
         self.show()
-        self.items_error = ErrorItem('APPLICATION-ERROR', 'Errors', self.model_tree.root_node_model, self.model_cache)
-        self.items_datatype = DatatypeItem('IMPLEMENTATION-DATA-TYPE', 'Data Types', self.model_tree.root_node_model)
-        self.items_method = MethodItem('CLIENT-SERVER-OPERATION', 'Methods', self.model_tree.root_node_model, self.model_cache)
-        self.items_event = EventItem('VARIABLE-DATA-PROTOTYPE', 'Events', self.model_tree.root_node_model, self.model_cache)
-        self.items_field = FieldItem('FIELD', 'Fields', self.model_tree.root_node_model, self.model_cache)
-        self.items_machine = MachineItem('MACHINE', 'Machine', self.model_tree.model)
-        self.items_deployment = ViewDeployment('SOMEIP-SERVICE-INTERFACE-DEPLOYMENT', None, self.model_tree.root_node_deployment, self.deploy_cache)
-#        self.items = [self.items_error, self.items_datatype, self.items_method, self.items_event, self.items_field, self.items_machine, self.items_deployment, self.view_deployment_method, self.view_deployment_field, self.view_deployment_event, self.view_deployment_event_group]
-        self.items = [self.items_error, self.items_datatype, self.items_method, self.items_event, self.items_field, self.items_machine, self.items_deployment]
+        self.view_error = self.add_view(ViewError(self.model_tree.root_node_model, self.model_cache))
+        self.view_datatype = self.add_view(ViewDataType(self.model_tree.root_node_model))
+        self.view_method = self.add_view(ViewMethod(self.model_tree.root_node_model, self.model_cache))
+        self.view_event = self.add_view(ViewEvent(self.model_tree.root_node_model, self.model_cache))
+        self.view_field = self.add_view(ViewField(self.model_tree.root_node_model, self.model_cache))
+        #self.view_machine = self.add_view(ViewMachine(self.model_tree.model))
+        self.view_deployment = self.add_view(ViewDeployment(self.model_tree.root_node_deployment, self.deploy_cache))
+
+
+    def add_view(self, view):
+        self.views.append(view)
+        return view
 
                     
     def show_model_tree_details(self, selected, deselected):
         a = self.model_tree.treeView.selectedIndexes()[0]
-        #print(a.data(Qt.DisplayRole))
         xml_node = a.data(Qt.UserRole + 1)
-        #print(b)
         self.detail.clear()
         if xml_node != None:
             self.show_xml(xml_node)
-            for item in self.items:
+            for item in self.views:
                 if item.show_detail(self.detail, xml_node):
                     return
-        self.detail.treeView.selectionModel().selectionChanged.connect(self.show_method_parameter_details)
-
-
-    def show_method_parameter_details(self, selected, deselected):
-        a = self.model_tree.treeView.selectedIndexes()[0]
-        #print(a.data(Qt.DisplayRole))
-        b = a.data(Qt.UserRole + 1)
-        #print(b)
-
-        arg = self.detail.treeView.selectedIndexes()[0]
-        print(arg.data(Qt.DisplayRole))
-        arg_node = arg.data(Qt.UserRole + 1)
-        print(arg_node)
-        self.show_xml(arg_node)
-
-        """self.combo.edit_name.setText(getShortName(arg_node))
-        dir_index = self.combo.cb_dir.findText(getDirection(arg_node))
-        if dir_index >= 0:
-            self.combo.cb_dir.setCurrentIndex(dir_index)"""
 
 
     def show_xml(self, node):
@@ -119,8 +102,9 @@ class App(QWidget):
 
     def parseXML(self, file):
         self.xmldoc = minidom.parse(file)
-        for item in self.items:
+        for item in self.views:
             item.parse(self.xmldoc, file)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

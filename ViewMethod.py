@@ -11,11 +11,11 @@ from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QGridLayout,
 QGroupBox, QHBoxLayout, QLabel, QLineEdit, QTreeView, QVBoxLayout,
 QWidget, QPushButton, QDialog, QPlainTextEdit, QTabWidget)
 from xml.dom import minidom
-from BaseItem import *
+from ViewBase import *
 
-class MethodItem(BaseItem):
-    def __init__(self, xml_name, view_name, view_root_node, cache):
-        BaseItem.__init__(self, xml_name, view_name, view_root_node, cache)
+class ViewMethod(ViewBase):
+    def __init__(self, view_root_node, cache):
+        ViewBase.__init__(self, 'CLIENT-SERVER-OPERATION', 'Methods', view_root_node, cache)
         pass
 
     def add(self, parent, xml_node):

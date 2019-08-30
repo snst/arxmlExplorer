@@ -14,18 +14,16 @@ from xml.dom import minidom
 from NamespaceCache import *
 from arxmlHelper import *
 
-class BaseItem():
+class ViewBase():
     def __init__(self, xml_name, view_name, view_root_node, cache = None):
         if cache:
             self.cache = cache
         else:
             self.cache = NamespaceCache()
-        self.xml_name = xml_name
+        self.xml_tag_name = xml_name
         self.view_name = view_name
         self.view_root_node = view_root_node
-        #self.view_root_node = QStandardItem(view_name)
-        #view_root_node.appendRow(self.view_root_node)
-        pass
+
 
     def get_namespace_view_node(self, xml_node, file):
         namespace = getNameSpace(xml_node)
@@ -46,10 +44,11 @@ class BaseItem():
 
 
     def parse(self, xml_root_node, file):
-        itemlist = xml_root_node.getElementsByTagName(self.xml_name)
+        itemlist = xml_root_node.getElementsByTagName(self.xml_tag_name)
         for s in itemlist:
-            view_node_namespace = self.get_namespace_view_node(s, file)
-            self.add(view_node_namespace, s)
+            tvnode_namespace = self.get_namespace_view_node(s, file)
+            self.add(tvnode_namespace, s)
+
 
     def add_namespace(self, parent, namespace, file, xml_node):
         item = QStandardItem(namespace)
@@ -58,11 +57,13 @@ class BaseItem():
         attach_type(item, 'NS')
         return item
 
+
     def show_detail(self, my_tree, xml_node):
-        if xml_node.localName != self.xml_name:
+        if xml_node.localName != self.xml_tag_name:
             return False
         self.show_detail_impl(my_tree, xml_node)
         return True
+
 
     def add_row_detail(self, parent, name, a, b=None, xml_node = None):
         item = QStandardItem(name)
@@ -72,6 +73,7 @@ class BaseItem():
         parent.appendRow(row)
         attach_xml_node(item, xml_node)
         return item
+
 
     def show_detail_impl(self, my_tree, xml_node):
         pass
