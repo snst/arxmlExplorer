@@ -22,7 +22,7 @@ class MethodItem(BaseItem):
         name = getShortName(xml_node)
         item = QStandardItem(name)
         parent.appendRow([item, QStandardItem(''), QStandardItem(''), QStandardItem('')])
-        self.attach_xml_node(item, xml_node)
+        attach_xml_node(item, xml_node)
         return item    
 
     def show_detail_impl(self, my_tree, node):
@@ -38,7 +38,7 @@ class MethodItem(BaseItem):
         namespace = QStandardItem(getType(node))
         #namespace.setToolTip('namespace')
         parent.appendRow([item, QStandardItem(getDirection(node)), namespace])
-        self.attach_xml_node(item, node)
+        attach_xml_node(item, node)
         return item
 
     def show_method_error(self, node, parent):

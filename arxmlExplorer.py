@@ -21,7 +21,7 @@ from MethodItem import *
 from EventItem import *
 from FieldItem import *
 from MachineItem import *
-from DeploymentItem import *
+from ViewDeployment import *
 from NamespaceCache import *
 
 class App(QWidget):
@@ -34,6 +34,7 @@ class App(QWidget):
         self.width = 800
         self.height = 700
         self.model_cache = NamespaceCache()
+        self.deploy_cache = NamespaceCache()
         self.initUI()
         path = './models/demo5'
         files = [f for f in os.listdir(path) if os.path.isfile(path + '/' + f)]
@@ -74,7 +75,8 @@ class App(QWidget):
         self.items_event = EventItem('VARIABLE-DATA-PROTOTYPE', 'Events', self.model_tree.root_node_model, self.model_cache)
         self.items_field = FieldItem('FIELD', 'Fields', self.model_tree.root_node_model, self.model_cache)
         self.items_machine = MachineItem('MACHINE', 'Machine', self.model_tree.model)
-        self.items_deployment = DeploymentItem('SOMEIP-SERVICE-INTERFACE-DEPLOYMENT', None, self.model_tree.root_node_deployment)
+        self.items_deployment = ViewDeployment('SOMEIP-SERVICE-INTERFACE-DEPLOYMENT', None, self.model_tree.root_node_deployment, self.deploy_cache)
+#        self.items = [self.items_error, self.items_datatype, self.items_method, self.items_event, self.items_field, self.items_machine, self.items_deployment, self.view_deployment_method, self.view_deployment_field, self.view_deployment_event, self.view_deployment_event_group]
         self.items = [self.items_error, self.items_datatype, self.items_method, self.items_event, self.items_field, self.items_machine, self.items_deployment]
 
                     
@@ -89,14 +91,6 @@ class App(QWidget):
             for item in self.items:
                 if item.show_detail(self.detail, xml_node):
                     return
-            if xml_node.localName == 'EVENT-DEPLOYMENTS':
-                self.items_deployment.show_detail_events(self.detail, xml_node)
-            elif xml_node.localName == 'EVENT-GROUPS':
-                self.items_deployment.show_detail_event_groups(self.detail, xml_node)
-            elif xml_node.localName == 'FIELD-DEPLOYMENTS':
-                self.items_deployment.show_detail_fields(self.detail, xml_node)
-            elif xml_node.localName == 'METHOD-DEPLOYMENTS':
-                self.items_deployment.show_detail_methods(self.detail, xml_node)
         self.detail.treeView.selectionModel().selectionChanged.connect(self.show_method_parameter_details)
 
 

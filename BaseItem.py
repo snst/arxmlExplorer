@@ -32,6 +32,7 @@ class BaseItem():
         view_namespace_node = self.cache.getViewNode(namespace)
         if not view_namespace_node:
             view_namespace_node = self.add_namespace(self.view_root_node, namespace, file, xml_node)
+            #attach_xml_node(view_namespace_node, xml_node)
             self.cache.addViewNode(namespace, view_namespace_node)
 
         if self.view_name:
@@ -53,17 +54,9 @@ class BaseItem():
     def add_namespace(self, parent, namespace, file, xml_node):
         item = QStandardItem(namespace)
         parent.appendRow([item, QStandardItem(''), QStandardItem(''), QStandardItem(file)])
-        self.attach_xml_node(item, xml_node)
-        self.attach_type(item, 'NS')
+        attach_xml_node(item, xml_node)
+        attach_type(item, 'NS')
         return item
-
-    def attach_type(self, item, str):
-        item.setData(str, Qt.UserRole + 2)
-
-    def attach_xml_node(self, item, xml_node):
-        if xml_node != None:
-            item.setData(xml_node, Qt.UserRole + 1)
-            pass
 
     def show_detail(self, my_tree, xml_node):
         if xml_node.localName != self.xml_name:
@@ -77,7 +70,7 @@ class BaseItem():
         if b:
             row.append(QStandardItem(b))
         parent.appendRow(row)
-        self.attach_xml_node(item, xml_node)
+        attach_xml_node(item, xml_node)
         return item
 
     def show_detail_impl(self, my_tree, xml_node):
@@ -98,5 +91,5 @@ class BaseItem():
                 first_item = item
             row.append(item)
         parent.appendRow(row)
-        self.attach_xml_node(first_item, xml_node)
+        attach_xml_node(first_item, xml_node)
         return first_item

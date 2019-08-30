@@ -77,7 +77,7 @@ class ModelTreeView():
     def add(self, parent, name, category, source, namespace='', xml_node = None):
         item = QStandardItem(name)
         parent.appendRow([item, QStandardItem(category), QStandardItem(namespace), QStandardItem(source)])
-        self.attach_xml_node(item, xml_node)
+        attach_xml_node(item, xml_node)
         return item
 
     def get_application_error_value(self, name):

@@ -22,7 +22,7 @@ class DatatypeItem(BaseItem):
         name = getShortName(xml_node)
         item = QStandardItem(name)
         parent.appendRow([item, QStandardItem(getCategory(xml_node)), QStandardItem(''), QStandardItem('')])
-        self.attach_xml_node(item, xml_node)
+        attach_xml_node(item, xml_node)
         return item    
 
     def show_detail_impl(self, my_tree, xml_node):
@@ -61,7 +61,7 @@ class DatatypeItem(BaseItem):
         nodecopy = node.cloneNode(True)
         removeAllChildNodesWithName(nodecopy, 'SUB-ELEMENTS')
         item = self.show_datatype_element(nodecopy, model)
-        self.attach_xml_node(item, node)
+        attach_xml_node(item, node)
 
         sub_element = findFirstChildNodeByName(node, 'SUB-ELEMENTS')
         if sub_element:

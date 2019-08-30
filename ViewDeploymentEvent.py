@@ -12,19 +12,13 @@ QGroupBox, QHBoxLayout, QLabel, QLineEdit, QTreeView, QVBoxLayout,
 QWidget, QPushButton, QDialog, QPlainTextEdit, QTabWidget)
 from xml.dom import minidom
 from BaseItem import *
+from ViewDeploymentBase import *
 
-class MachineItem(BaseItem):
-    def __init__(self, xml_name, view_name, view_root_node):
-        BaseItem.__init__(self, xml_name, view_name, view_root_node)
+class ViewDeploymentEvent(ViewDeploymentBase):
+    def __init__(self, xml_name, view_name, view_root_node, cache):
+        ViewDeploymentBase.__init__(self, xml_name, view_name, view_root_node, cache)
         pass
 
-    def add(self, parent, xml_node):
-        item = None
-        name = getShortName(xml_node)
-        if parent:
-            item = QStandardItem(name)
-            parent.appendRow([item, QStandardItem(''), QStandardItem(''), QStandardItem('')])
-            attach_xml_node(item, xml_node)
-        else:
-            print("Failed to add:" + name)
-        return item    
+    def show_detail_methods(self, my_tree, xml_node):
+        s = xml_node
+        self.add_row_detail2(my_tree, [getShortName(s), getValueByNameT(s, 'EVENT-ID'), getValueByNameT(s, 'TRANSPORT-PROTOCOL'), getValueByNameDeepT(s, 'EVENT-REF')], s)

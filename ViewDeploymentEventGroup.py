@@ -12,15 +12,16 @@ QGroupBox, QHBoxLayout, QLabel, QLineEdit, QTreeView, QVBoxLayout,
 QWidget, QPushButton, QDialog, QPlainTextEdit, QTabWidget)
 from xml.dom import minidom
 from BaseItem import *
+from ViewDeploymentBase import *
 
-class ErrorItem(BaseItem):
+class ViewDeploymentEventGroup(ViewDeploymentBase):
     def __init__(self, xml_name, view_name, view_root_node, cache):
-        BaseItem.__init__(self, xml_name, view_name, view_root_node, cache)
+        ViewDeploymentBase.__init__(self, xml_name, view_name, view_root_node, cache)
         pass
 
-    def add(self, parent, xml_node):
-        name = getShortName(xml_node)
-        item = QStandardItem(name)
-        parent.appendRow([item, QStandardItem(getXmlErrorCode(xml_node)), QStandardItem(''), QStandardItem('')])
-        attach_xml_node(item, xml_node)
-        return item    
+    def show_detail_methods(self, my_tree, xml_node):
+        s = xml_node
+        eg_view = self.add_row_detail2(my_tree, [getShortName(s), [getValueByName(s, 'EVENT-GROUP-ID'), 'EVENT-GROUP-ID']], s)
+        eg_list = s.getElementsByTagName('EVENT-REF')
+        for eref_xml in eg_list:
+                self.add_row_detail2(eg_view, ['Ref', [getXmlContent(eref_xml), 'EVENT-REF']], eref_xml)

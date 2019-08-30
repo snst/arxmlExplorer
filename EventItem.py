@@ -22,7 +22,7 @@ class EventItem(BaseItem):
         name = getShortName(xml_node)
         item = QStandardItem(name)
         parent.appendRow([item, QStandardItem(''), QStandardItem(''), QStandardItem('')])
-        self.attach_xml_node(item, xml_node)
+        attach_xml_node(item, xml_node)
         return item    
 
 

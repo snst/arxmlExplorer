@@ -4,6 +4,7 @@
 import os
 import sys
 from xml.dom import *
+from PyQt5.QtCore import (Qt)
 
 def getXmlContent(node):
     val = None
@@ -131,4 +132,11 @@ def getNameSpace(node):
     val = getNameSpaceIntern(node.parentNode)
     return val
 
-    
+
+def attach_type(item, str):
+    item.setData(str, Qt.UserRole + 2)
+
+def attach_xml_node(item, xml_node):
+    if xml_node != None:
+        item.setData(xml_node, Qt.UserRole + 1)
+        pass

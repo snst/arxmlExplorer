@@ -38,7 +38,7 @@ class MethodArgumentsTreeView():
         item = QStandardItem(name)
         self.model.appendRow([item, QStandardItem(category), QStandardItem(namespace), QStandardItem(source)])
         #
-        self.attach_xml_node(item, xml_node)
+        attach_xml_node(item, xml_node)
         return item
 
 
