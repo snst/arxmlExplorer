@@ -18,7 +18,7 @@ class ViewDataType(ViewBase):
         ViewBase.__init__(self, 'IMPLEMENTATION-DATA-TYPE', 'Data Types', view_root_node)
         pass
 
-    def add(self, parent, xml_node):
+    def add_to_treeview(self, parent, xml_node):
         name = getShortName(xml_node)
         item = QStandardItem(name)
         parent.appendRow([item, QStandardItem(getCategory(xml_node)), QStandardItem(''), QStandardItem('')])

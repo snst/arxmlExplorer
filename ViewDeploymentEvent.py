@@ -21,4 +21,4 @@ class ViewDeploymentEvent(ViewDeploymentBase):
 
     def show_detail_methods(self, my_tree, xml_node):
         s = xml_node
-        self.add_row_detail2(my_tree, [getShortName(s), getValueByNameT(s, 'EVENT-ID'), getValueByNameT(s, 'TRANSPORT-PROTOCOL'), getValueByNameDeepT(s, 'EVENT-REF')], s)
+        self.add_tv_row_detail(my_tree, [getShortName(s), getValueByNameT(s, 'EVENT-ID'), getValueByNameT(s, 'TRANSPORT-PROTOCOL'), getValueByNameDeepT(s, 'EVENT-REF')], s)

@@ -30,14 +30,14 @@ class ViewDeployment(ViewBase):
         pass
 
     def show_detail_methods(self, model, xml_node):
-        item = self.add_row_detail(model, 'Service Interface Id', getValueByName(xml_node, 'SERVICE-INTERFACE-ID'))
-        item = self.add_row_detail(model, 'Service Interface Ref', getValueByName(xml_node, 'SERVICE-INTERFACE-REF'))
+        item = self.add_tv_row_detail(model, ['Service Interface Id', getValueByNameT(xml_node, 'SERVICE-INTERFACE-ID')])
+        item = self.add_tv_row_detail(model, ['Service Interface Ref', getValueByNameT(xml_node, 'SERVICE-INTERFACE-REF')])
         version_node = findFirstChildNodeByName(xml_node, 'SERVICE-INTERFACE-VERSION')
-        item = self.add_row_detail(model, 'Service Interface Version', '')
-        self.add_row_detail(item, 'Major', getValueByName(version_node, 'MAJOR-VERSION'))
-        self.add_row_detail(item, 'Minor', getValueByName(version_node, 'MINOR-VERSION'))
+        item = self.add_tv_row_detail(model, ['Service Interface Version'])
+        self.add_tv_row_detail(item, ['Major', getValueByNameT(version_node, 'MAJOR-VERSION')])
+        self.add_tv_row_detail(item, ['Minor', getValueByNameT(version_node, 'MINOR-VERSION')])
 
-    def add(self, parent, xml_node):
+    def add_to_treeview(self, parent, xml_node):
         name = getShortName(xml_node)
         #item = QStandardItem(name)
         namespace = getNameSpace(xml_node)

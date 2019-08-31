@@ -18,7 +18,7 @@ class ViewMachine(ViewBase):
         ViewBase.__init__(self, 'MACHINE', 'Machine', view_root_node)
         pass
 
-    def add(self, parent, xml_node):
+    def add_to_treeview(self, parent, xml_node):
         item = None
         name = getShortName(xml_node)
         if parent:

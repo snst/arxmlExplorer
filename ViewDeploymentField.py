@@ -21,18 +21,18 @@ class ViewDeploymentField(ViewDeploymentBase):
 
     def show_detail_methods(self, my_tree, xml_node):
         s = xml_node
-        field = self.add_row_detail2(my_tree, [getShortName(s), '', getValueByNameT(s, 'FIELD-REF')], s)
+        field = self.add_tv_row_detail(my_tree, [getShortName(s), '', getValueByNameT(s, 'FIELD-REF')], s)
 
         node = findFirstChildNodeByName(s, 'GET')
         if node:
-            self.add_row_detail2(field, [[getShortName(node), 'GET'], getValueByNameT(node, 'METHOD-ID'), getValueByNameT(node, 'TRANSPORT-PROTOCOL')], node)
+            self.add_tv_row_detail(field, [[getShortName(node), 'GET'], getValueByNameT(node, 'METHOD-ID'), getValueByNameT(node, 'TRANSPORT-PROTOCOL')], node)
 
         node = findFirstChildNodeByName(s, 'SET')
         if node:
-            self.add_row_detail2(field, [[getShortName(node), 'SET'], getValueByNameT(node, 'METHOD-ID'), getValueByNameT(node, 'TRANSPORT-PROTOCOL')], node)
+            self.add_tv_row_detail(field, [[getShortName(node), 'SET'], getValueByNameT(node, 'METHOD-ID'), getValueByNameT(node, 'TRANSPORT-PROTOCOL')], node)
 
         node = findFirstChildNodeByName(s, 'NOTIFIER')
         if node:
-            self.add_row_detail2(field, [[getShortName(node), 'NOTIFIER'], getValueByNameT(node, 'EVENT-ID'), getValueByNameT(node, 'TRANSPORT-PROTOCOL')], node)
+            self.add_tv_row_detail(field, [[getShortName(node), 'NOTIFIER'], getValueByNameT(node, 'EVENT-ID'), getValueByNameT(node, 'TRANSPORT-PROTOCOL')], node)
 
 

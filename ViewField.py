@@ -18,7 +18,7 @@ class ViewField(ViewBase):
         ViewBase.__init__(self, 'FIELD', 'Fields',  view_root_node, cache)
         pass
 
-    def add(self, parent, xml_node):
+    def add_to_treeview(self, parent, xml_node):
         name = getShortName(xml_node)
         item = QStandardItem(name)
         parent.appendRow([item, QStandardItem(''), QStandardItem(''), QStandardItem('')])
@@ -34,10 +34,10 @@ class ViewField(ViewBase):
 
 
     def show_detail_data(self, view_node, xml_node):
-        item = self.add_row_detail(view_node, 'TYPE-TREF', getType(xml_node))
-        item = self.add_row_detail(view_node, 'HAS-GETTER', getValueByName(xml_node, 'HAS-GETTER'))
-        item = self.add_row_detail(view_node, 'HAS-NOTIFIER', getValueByName(xml_node, 'HAS-NOTIFIER'))
-        item = self.add_row_detail(view_node, 'HAS-SETTER', getValueByName(xml_node, 'HAS-SETTER'))
+        item = self.add_tv_row_detail(view_node, ['TYPE-TREF', getType(xml_node)])
+        item = self.add_tv_row_detail(view_node, ['HAS-GETTER', getValueByNameT(xml_node, 'HAS-GETTER')])
+        item = self.add_tv_row_detail(view_node, ['HAS-NOTIFIER', getValueByNameT(xml_node, 'HAS-NOTIFIER')])
+        item = self.add_tv_row_detail(view_node, ['HAS-SETTER', getValueByNameT(xml_node, 'HAS-SETTER')])
 
 
     def clear_detail(self, my_tree):

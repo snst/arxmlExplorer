@@ -15,21 +15,21 @@ from NamespaceCache import *
 from arxmlHelper import *
 
 class ViewBase():
-    def __init__(self, xml_name, view_name, view_root_node, cache = None):
+    def __init__(self, xml_tag_name, view_name, view_root_node, cache = None):
         if cache:
             self.cache = cache
         else:
             self.cache = NamespaceCache()
-        self.xml_tag_name = xml_name
+        self.xml_tag_name = xml_tag_name
         self.view_name = view_name
         self.view_root_node = view_root_node
 
 
-    def get_namespace_view_node(self, xml_node, file):
+    def get_tv_namespace_node(self, xml_node, file):
         namespace = getNameSpace(xml_node)
         view_namespace_node = self.cache.getViewNode(namespace)
         if not view_namespace_node:
-            view_namespace_node = self.add_namespace(self.view_root_node, namespace, file, xml_node)
+            view_namespace_node = self.add_tv_namespace_node(self.view_root_node, namespace, file, xml_node)
             #attach_xml_node(view_namespace_node, xml_node)
             self.cache.addViewNode(namespace, view_namespace_node)
 
@@ -40,17 +40,16 @@ class ViewBase():
             return node
         else:
             return view_namespace_node
-        #return view_namespace_node
 
 
-    def parse(self, xml_root_node, file):
-        itemlist = xml_root_node.getElementsByTagName(self.xml_tag_name)
+    def parse(self, xml_node, file):
+        itemlist = xml_node.getElementsByTagName(self.xml_tag_name)
         for s in itemlist:
-            tvnode_namespace = self.get_namespace_view_node(s, file)
-            self.add(tvnode_namespace, s)
+            tv_parent = self.get_tv_namespace_node(s, file)
+            self.add_to_treeview(tv_parent, s)
 
 
-    def add_namespace(self, parent, namespace, file, xml_node):
+    def add_tv_namespace_node(self, parent, namespace, file, xml_node):
         item = QStandardItem(namespace)
         parent.appendRow([item, QStandardItem(''), QStandardItem(''), QStandardItem(file)])
         attach_xml_node(item, xml_node)
@@ -58,28 +57,17 @@ class ViewBase():
         return item
 
 
-    def show_detail(self, my_tree, xml_node):
+    def show_detail(self, tree_view, xml_node):
         if xml_node.localName != self.xml_tag_name:
             return False
-        self.show_detail_impl(my_tree, xml_node)
+        self.show_detail_impl(tree_view, xml_node)
         return True
-
-
-    def add_row_detail(self, parent, name, a, b=None, xml_node = None):
-        item = QStandardItem(name)
-        row = [item, QStandardItem(a)]
-        if b:
-            row.append(QStandardItem(b))
-        parent.appendRow(row)
-        attach_xml_node(item, xml_node)
-        return item
-
 
     def show_detail_impl(self, my_tree, xml_node):
         pass
 
 
-    def add_row_detail2(self, parent, arg_list, xml_node = None):
+    def add_tv_row_detail(self, parent, arg_list, xml_node = None):
         row = []
         first_item = None
         item = None

@@ -18,9 +18,9 @@ class ViewError(ViewBase):
         ViewBase.__init__(self, 'APPLICATION-ERROR', 'Errors', view_root_node, cache)
         pass
 
-    def add(self, parent, xml_node):
+    def add_to_treeview(self, tv_parent, xml_node):
         name = getShortName(xml_node)
         item = QStandardItem(name)
-        parent.appendRow([item, QStandardItem(getXmlErrorCode(xml_node)), QStandardItem(''), QStandardItem('')])
+        tv_parent.appendRow([item, QStandardItem(getXmlErrorCode(xml_node)), QStandardItem(''), QStandardItem('')])
         attach_xml_node(item, xml_node)
         return item    

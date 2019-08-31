@@ -18,7 +18,7 @@ class ViewMethod(ViewBase):
         ViewBase.__init__(self, 'CLIENT-SERVER-OPERATION', 'Methods', view_root_node, cache)
         pass
 
-    def add(self, parent, xml_node):
+    def add_to_treeview(self, parent, xml_node):
         name = getShortName(xml_node)
         item = QStandardItem(name)
         parent.appendRow([item, QStandardItem(''), QStandardItem(''), QStandardItem('')])
@@ -53,18 +53,17 @@ class ViewMethod(ViewBase):
     def show_method(self, node, model):
 
         #Fire-And-Forget
-        item = self.add_row_detail(model, 'Fire-And-Forget', getFireAndForget(node), '')
+        item = self.add_tv_row_detail(model, ['Fire-And-Forget', getFireAndForget(node)])
 
         # methode name
-        #item = self.add_row_detail(model, getShortName(node), '', QStandardItem(getNameSpace(node)), node)
-        item = self.add_row_detail(model, 'Arguments', '', '')
+        item = self.add_tv_row_detail(model, ['Arguments'])
         #method arguments
         itemlist = node.getElementsByTagName('ARGUMENT-DATA-PROTOTYPE')
         for s in itemlist:
             self.show_method_param(s, item)
 
         #method errors
-        item = self.add_row_detail(model, 'Possible Errors', '', '')
+        item = self.add_tv_row_detail(model, ['Possible Errors'])
         itemlist = node.getElementsByTagName('POSSIBLE-ERROR-REF')
         for s in itemlist:
             self.show_method_error(s, item)

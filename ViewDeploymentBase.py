@@ -21,7 +21,7 @@ class ViewDeploymentBase(ViewBase):
     def parse(self, xml_root_node, file):
         itemlist = xml_root_node.getElementsByTagName(self.xml_tag_name)
         for s in itemlist:
-            view_node_namespace = self.get_namespace_view_node(s, file)
+            view_node_namespace = self.get_tv_namespace_node(s, file)
             self.add(view_node_namespace, s)
 
     def parse2(self, xml_root_node, parent_view_node):
@@ -32,7 +32,7 @@ class ViewDeploymentBase(ViewBase):
             parent_view_node.appendRow([sub_item, QStandardItem(''), QStandardItem(''), QStandardItem('')])
 
         for s in itemlist:
-            #view_node_namespace = self.get_namespace_view_node(s, file)
+            #view_node_namespace = self.get_tv_namespace_node(s, file)
             self.add(sub_item, s)
 
 
