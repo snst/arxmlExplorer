@@ -65,8 +65,18 @@ class ViewBase():
 
 
     def show_detail_impl(self, my_tree, xml_node):
+        self.clear_detail(my_tree)
+        self.show_detail_data(my_tree.model, xml_node)
+        my_tree.treeView.expandAll()
+
+
+    def clear_detail(self, tree):
         pass
 
+
+    def show_detail_data(self, tree, node):
+        pass
+        
 
     def add_tv_row_detail(self, parent, arg_list, xml_node = None):
         row = []

@@ -19,7 +19,7 @@ class ViewDeploymentEventGroup(ViewDeploymentBase):
         ViewDeploymentBase.__init__(self, 'SOMEIP-EVENT-GROUP', 'Event Groups', view_root_node, cache)
         pass
 
-    def show_detail_methods(self, my_tree, xml_node):
+    def show_detail_data(self, my_tree, xml_node):
         s = xml_node
         eg_view = self.add_tv_row_detail(my_tree, [getShortName(s), [getValueByName(s, 'EVENT-GROUP-ID'), 'EVENT-GROUP-ID']], s)
         eg_list = s.getElementsByTagName('EVENT-REF')

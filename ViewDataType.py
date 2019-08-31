@@ -25,11 +25,6 @@ class ViewDataType(ViewBase):
         attach_xml_node(item, xml_node)
         return item    
 
-    def show_detail_impl(self, my_tree, xml_node):
-        self.clear_detail(my_tree)
-        self.show_datatype(xml_node, my_tree.model)
-        my_tree.treeView.expandAll()
-        return True
 
     def clear_detail(self, my_tree):
         my_tree.model = QStandardItemModel(0, 5, None)

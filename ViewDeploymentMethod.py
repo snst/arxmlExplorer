@@ -19,6 +19,6 @@ class ViewDeploymentMethod(ViewDeploymentBase):
         ViewDeploymentBase.__init__(self, 'SOMEIP-METHOD-DEPLOYMENT', 'Methods', view_root_node, cache)
         pass
 
-    def show_detail_methods(self, my_tree, xml_node):
+    def show_detail_data(self, my_tree, xml_node):
         s = xml_node
         self.add_tv_row_detail(my_tree, [getShortName(s), getValueByNameT(s, 'METHOD-ID'), getValueByNameT(s, 'TRANSPORT-PROTOCOL'), getValueByNameDeepT(s, 'METHOD-REF')], s)

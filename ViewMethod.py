@@ -25,12 +25,6 @@ class ViewMethod(ViewBase):
         attach_xml_node(item, xml_node)
         return item    
 
-    def show_detail_impl(self, my_tree, node):
-        self.tree_view = my_tree.treeView
-        self.clear_detail(my_tree)
-        self.show_method(node, my_tree.model)
-        my_tree.treeView.expandAll()
-
 
     def show_method_param(self, node, parent):
         item = QStandardItem(getShortName(node))
@@ -50,7 +44,7 @@ class ViewMethod(ViewBase):
         self.tree_view.setFirstColumnSpanned(k-1, parent.index(), True)
 
 
-    def show_method(self, node, model):
+    def show_detail_data(self, model, node):
 
         #Fire-And-Forget
         item = self.add_tv_row_detail(model, ['Fire-And-Forget', getFireAndForget(node)])

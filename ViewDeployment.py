@@ -29,7 +29,7 @@ class ViewDeployment(ViewBase):
         self.view_deployment_event_group = ViewDeploymentEventGroup(view_root_node, cache)
         pass
 
-    def show_detail_methods(self, model, xml_node):
+    def show_detail_data(self, model, xml_node):
         item = self.add_tv_row_detail(model, ['Service Interface Id', getValueByNameT(xml_node, 'SERVICE-INTERFACE-ID')])
         item = self.add_tv_row_detail(model, ['Service Interface Ref', getValueByNameT(xml_node, 'SERVICE-INTERFACE-REF')])
         version_node = findFirstChildNodeByName(xml_node, 'SERVICE-INTERFACE-VERSION')
@@ -55,7 +55,7 @@ class ViewDeployment(ViewBase):
     def show_detail_impl(self, my_tree, xml_node):
         self.tree_view = my_tree.treeView
         self.clear_detail(my_tree)
-        self.show_detail_methods(my_tree.model, xml_node)
+        self.show_detail_data(my_tree.model, xml_node)
         my_tree.treeView.expandAll()
 
     def clear_detail(self, my_tree):

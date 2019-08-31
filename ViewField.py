@@ -26,13 +26,6 @@ class ViewField(ViewBase):
         return item    
 
 
-    def show_detail_impl(self, my_tree, xml_node):
-        self.tree_view = my_tree.treeView
-        self.clear_detail(my_tree)
-        self.show_detail_data(my_tree.model, xml_node)
-        my_tree.treeView.expandAll()
-
-
     def show_detail_data(self, view_node, xml_node):
         item = self.add_tv_row_detail(view_node, ['TYPE-TREF', getType(xml_node)])
         item = self.add_tv_row_detail(view_node, ['HAS-GETTER', getValueByNameT(xml_node, 'HAS-GETTER')])
