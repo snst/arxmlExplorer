@@ -63,6 +63,7 @@ class ViewBase():
         self.show_detail_impl(tree_view, xml_node)
         return True
 
+
     def show_detail_impl(self, my_tree, xml_node):
         pass
 
