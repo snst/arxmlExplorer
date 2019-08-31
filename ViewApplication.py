@@ -20,9 +20,9 @@ from ViewDeploymentEventGroup import *
 from NamespaceCache import *
 
 
-class ViewMachine(ViewBase):
+class ViewApplication(ViewBase):
     def __init__(self, view_root_node, cache):
-        ViewBase.__init__(self, 'MACHINE', None, view_root_node, cache)
+        ViewBase.__init__(self, 'ADAPTIVE-AUTOSAR-APPLICATION', None, view_root_node, cache)
         pass
 
     def show_detail_data(self, model, xml_node):

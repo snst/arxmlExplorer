@@ -23,6 +23,13 @@ from ViewField import *
 from ViewMachine import *
 from ViewDeployment import *
 from NamespaceCache import *
+from ViewModeDeclaration import *
+from ViewEthernet import *
+from ViewMachine import *
+from ViewProcess import *
+from ViewExecutable import *
+from ViewStartupConfig import *
+from ViewApplication import *
 
 class App(QWidget):
   
@@ -77,6 +84,14 @@ class App(QWidget):
         self.view_field = self.add_view(ViewField(self.model_tree.root_node_model, self.model_cache))
         #self.view_machine = self.add_view(ViewMachine(self.model_tree.model))
         self.view_deployment = self.add_view(ViewDeployment(self.model_tree.root_node_deployment, self.deploy_cache))
+        self.view_mode_declaration = self.add_view(ViewModeDeclaration(self.model_tree.root_node_modes, None))
+        self.view_ethernet = self.add_view(ViewEthernet(self.model_tree.root_node_ethernet, None))
+        self.view_machine = self.add_view(ViewMachine(self.model_tree.root_node_machine, None))
+
+        self.view_executable = self.add_view(ViewExecutable(self.model_tree.root_node_executable, None))
+        self.view_process = self.add_view(ViewProcess(self.model_tree.root_node_process, None))
+        self.view_startup_config = self.add_view(ViewStartupConfig(self.model_tree.root_node_startup_config, None))
+        self.view_application = self.add_view(ViewApplication(self.model_tree.root_node_application, None))
 
 
     def add_view(self, view):

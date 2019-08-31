@@ -52,11 +52,24 @@ class ModelTreeView():
         self.treeView.setColumnWidth(0, 350)
         self.treeView.setColumnWidth(2, 250)
 
-        self.root_node_model = QStandardItem('Model')
-        self.model.appendRow(self.root_node_model)
-        self.root_node_deployment = QStandardItem('Deployment')
-        self.model.appendRow(self.root_node_deployment)
+
+
+        self.root_node_model = self.add_main_node('Model')
+        self.root_node_deployment = self.add_main_node('Deployment')
+        self.root_node_modes = self.add_main_node('Modes')
+        self.root_node_ethernet = self.add_main_node('Ethernet')
+        self.root_node_machine = self.add_main_node('Machine')
+        self.root_node_application = self.add_main_node('Application')
+        self.root_node_process = self.add_main_node('Process')
+        self.root_node_executable = self.add_main_node('Executable')
+        self.root_node_startup_config = self.add_main_node('Startup Config')
         pass
+
+    def add_main_node(self, name):
+        node = QStandardItem(name)
+        self.model.appendRow(node)
+        return node
+
 
     def on_filter_updated(self):
         str = self.textbox_filter.text()

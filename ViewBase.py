@@ -70,9 +70,13 @@ class ViewBase():
         my_tree.treeView.expandAll()
 
 
-    def clear_detail(self, tree):
-        pass
-
+    def clear_detail(self, my_tree):
+        my_tree.model = QStandardItemModel(0, 2, None)
+        my_tree.model.setHeaderData(0, Qt.Horizontal, 'Name')
+        my_tree.model.setHeaderData(1, Qt.Horizontal, 'Value')
+        my_tree.treeView.setModel(my_tree.model)
+        my_tree.treeView.setColumnWidth(0, 200)
+        pass   
 
     def show_detail_data(self, tree, node):
         pass
