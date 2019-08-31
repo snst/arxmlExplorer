@@ -25,9 +25,6 @@ class ViewMachine(ViewBase):
         ViewBase.__init__(self, 'MACHINE', None, view_root_node, cache)
         pass
 
-    def show_detail_data(self, model, xml_node):
-        pass
-
     def add_to_treeview(self, parent, xml_node):
         name = getShortName(xml_node)
         namespace = getNameSpace(xml_node)

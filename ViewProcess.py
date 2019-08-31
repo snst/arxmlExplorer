@@ -25,9 +25,6 @@ class ViewProcess(ViewBase):
         ViewBase.__init__(self, 'PROCESS', None, view_root_node, cache)
         pass
 
-    def show_detail_data(self, model, xml_node):
-        pass
-
     def add_to_treeview(self, parent, xml_node):
         name = getShortName(xml_node)
         namespace = getNameSpace(xml_node)
@@ -41,3 +38,8 @@ class ViewProcess(ViewBase):
         self.clear_detail(my_tree)
         self.show_detail_data(my_tree.model, xml_node)
         my_tree.treeView.expandAll()
+
+
+    def show_detail_data(self, my_tree, xml_node):
+        s = xml_node
+        self.add_tv_row_detail(my_tree, ['Executable', getValueByNameT(s, 'EXECUTABLE-REF')], s)
