@@ -55,7 +55,7 @@ class App(QWidget):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.model_tree = ModelTreeView()
-        self.detail = MethodArgumentsTreeView("Details")
+        self.detail = MethodArgumentsTreeView("Details", self)
         self.errorlist = MethodErrorListWidget()
         self.combo = MethodArgumentEditor()
         self.tabs = QTabWidget()

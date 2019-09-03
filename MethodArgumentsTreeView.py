@@ -4,8 +4,7 @@
 import os
 import sys
 from PyQt5.QtGui import QIcon, QStandardItem
-from PyQt5.QtCore import (QDate, QDateTime, QRegExp, QSortFilterProxyModel, Qt,
-QTime, pyqtSlot, QObject, pyqtSignal)
+from PyQt5.QtCore import *
 from PyQt5.QtGui import QStandardItemModel
 from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QGridLayout,
 QGroupBox, QHBoxLayout, QLabel, QLineEdit, QTreeView, QVBoxLayout,
@@ -15,9 +14,10 @@ from arxmlHelper import *
 
 
 class MethodArgumentsTreeView():
-    def __init__(self, name):
+    def __init__(self, name, main):
         self.groupDataTypes = QGroupBox(name)
         self.treeView = QTreeView()
+        self.treeView.mousePressEvent = self.mousePressEvent
         #self.treeView.setRootIsDecorated(False)
         self.treeView.setAlternatingRowColors(True)
         dataLayout = QHBoxLayout()
@@ -25,7 +25,51 @@ class MethodArgumentsTreeView():
         self.groupDataTypes.setLayout(dataLayout)
         self.model = None
         self.clear_obsolete()
+        self.main = main
         pass
+
+    def mousePressEvent(self, event):
+        if event.type() == QEvent.MouseButtonPress:
+            if event.button() == Qt.RightButton:
+                self.jump_to_reference()
+                return
+            else:
+                super(QTreeView, self.treeView).mousePressEvent(event)
+
+    def jump_to_reference(self):
+        index = self.treeView.selectionModel().selectedIndexes()
+        if index:
+            a = index[0]
+            xml_node = a.data(Qt.UserRole + 1)
+            text = a.data(Qt.DisplayRole)
+            print(xml_node)
+            print(text)
+            ns = text[1:].replace('/', '::')
+            node = self.main.view_executable.cache.getViewNode(ns)
+            print(node)
+            print(node.data(Qt.DisplayRole))
+            if node:
+                proxy = self.main.model_tree.treeView.model()
+                model = proxy.sourceModel()    
+                #k = proxy.indexFromItem(node)
+                #k = model.index(3, 0)
+                k = model.indexFromItem(node.parent().parent())
+                self.main.model_tree.treeView.setExpanded(proxy.mapFromSource(k), True)
+                k2 = model.indexFromItem(node.parent())
+                k3 = model.indexFromItem(node)
+                self.main.model_tree.treeView.setExpanded(proxy.mapFromSource(k2), True)
+                self.main.model_tree.treeView.scrollTo(proxy.mapFromSource(k2), True)
+                self.main.model_tree.treeView.setCurrentIndex(proxy.mapFromSource(k3))
+
+                #k = self.main.model_tree.model.indexFromItem(node.parent())
+                #k = self.main.model_tree.model.indexFromItem(node)
+                #px = self.main.model_tree.proxyModel.mapFromSource(k)
+                #self.main.model_tree.treeView.selectionModel().setCurrentIndex(node.index(), QItemSelectionModel.ClearAndSelect)
+                #self.main.model_tree.treeView.setExpanded(px, True)
+                #self.main.model_tree.treeView.expandRecursively(k, -1)
+                #self.main.model_tree.treeView.setFirstColumnSpanned(1, k, True)
+        pass
+
 
     def attach_xml_node(self, item, xml_node):
         if xml_node != None:

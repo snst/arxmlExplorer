@@ -27,9 +27,9 @@ class NamespaceCache():
     def addViewSubNode(self, namespace, view_node, sub_node_name):
         node = QStandardItem(sub_node_name)
         view_node.appendRow(node)
-        self.dict[namespace + '&&' + sub_node_name] = node
+        self.dict[namespace + '::' + sub_node_name] = node
         return node
 
     def getViewSubNode(self, namespace, sub_node_name):
-        node = self.dict.get(namespace + '&&' + sub_node_name)
+        node = self.dict.get(namespace + '::' + sub_node_name)
         return node
