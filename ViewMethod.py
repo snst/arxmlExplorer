@@ -41,7 +41,7 @@ class ViewMethod(ViewBase):
         n = QStandardItem(error_name)
         parent.appendRow([n])
         k = parent.rowCount()
-        self.tree_view.setFirstColumnSpanned(k-1, parent.index(), True)
+        #todo self.tree_view.setFirstColumnSpanned(k-1, parent.index(), True)
 
 
     def show_detail_data(self, model, node):
@@ -60,7 +60,8 @@ class ViewMethod(ViewBase):
         item = self.add_tv_row_detail(model, ['Possible Errors'])
         itemlist = node.getElementsByTagName('POSSIBLE-ERROR-REF')
         for s in itemlist:
-            self.show_method_error(s, item)
+            #self.show_method_error(s, item)
+            self.add_tv_row_detail(item, ['POSSIBLE-ERROR-REF', [getXmlContent(s), 'POSSIBLE-ERROR-REF']], s)
 
     def clear_detail(self, my_tree):
         my_tree.model = QStandardItemModel(0, 3, None)

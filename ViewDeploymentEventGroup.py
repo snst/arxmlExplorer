@@ -24,4 +24,4 @@ class ViewDeploymentEventGroup(ViewDeploymentBase):
         eg_view = self.add_tv_row_detail(my_tree, [getShortName(s), [getValueByName(s, 'EVENT-GROUP-ID'), 'EVENT-GROUP-ID']], s)
         eg_list = s.getElementsByTagName('EVENT-REF')
         for eref_xml in eg_list:
-                self.add_tv_row_detail(eg_view, ['Ref', [getXmlContent(eref_xml), 'EVENT-REF']], eref_xml)
+                self.add_tv_row_detail(eg_view, ['EVENT-REF', [getXmlContent(eref_xml), 'EVENT-REF']], eref_xml)

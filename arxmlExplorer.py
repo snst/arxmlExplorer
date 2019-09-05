@@ -93,6 +93,11 @@ class App(QWidget):
         self.view_startup_config = self.add_view(ViewStartupConfig(self.model_tree.root_node_startup_config, None))
         self.view_application = self.add_view(ViewApplication(self.model_tree.root_node_application, None))
 
+    def get_cache_for(self, name):
+        for view in self.views:
+            if view.xml_tag_name == name:
+                return view.cache
+        return None
 
     def add_view(self, view):
         self.views.append(view)

@@ -31,7 +31,7 @@ class ViewDeployment(ViewBase):
 
     def show_detail_data(self, model, xml_node):
         item = self.add_tv_row_detail(model, ['Service Interface Id', getValueByNameT(xml_node, 'SERVICE-INTERFACE-ID')])
-        item = self.add_tv_row_detail(model, ['Service Interface Ref', getValueByNameT(xml_node, 'SERVICE-INTERFACE-REF')])
+        item = self.add_tv_row_detail(model, ['SERVICE-INTERFACE-REF', getValueByNameT(xml_node, 'SERVICE-INTERFACE-REF')])
         version_node = findFirstChildNodeByName(xml_node, 'SERVICE-INTERFACE-VERSION')
         item = self.add_tv_row_detail(model, ['Service Interface Version'])
         self.add_tv_row_detail(item, ['Major', getValueByNameT(version_node, 'MAJOR-VERSION')])

@@ -37,37 +37,20 @@ class MethodArgumentsTreeView():
                 super(QTreeView, self.treeView).mousePressEvent(event)
 
     def jump_to_reference(self):
-        index = self.treeView.selectionModel().selectedIndexes()
-        if index:
-            a = index[0]
-            xml_node = a.data(Qt.UserRole + 1)
-            text = a.data(Qt.DisplayRole)
-            print(xml_node)
-            print(text)
+        row = get_selected_tvnode_from_treeview(self.treeView)
+        if row:
+            text = get_text_from_tvnode(row[1])
             ns = text[1:].replace('/', '::')
-            node = self.main.view_executable.cache.getViewNode(ns)
-            print(node)
-            print(node.data(Qt.DisplayRole))
-            if node:
-                proxy = self.main.model_tree.treeView.model()
-                model = proxy.sourceModel()    
-                #k = proxy.indexFromItem(node)
-                #k = model.index(3, 0)
-                k = model.indexFromItem(node.parent().parent())
-                self.main.model_tree.treeView.setExpanded(proxy.mapFromSource(k), True)
-                k2 = model.indexFromItem(node.parent())
-                k3 = model.indexFromItem(node)
-                self.main.model_tree.treeView.setExpanded(proxy.mapFromSource(k2), True)
-                self.main.model_tree.treeView.scrollTo(proxy.mapFromSource(k2), True)
-                self.main.model_tree.treeView.setCurrentIndex(proxy.mapFromSource(k3))
 
-                #k = self.main.model_tree.model.indexFromItem(node.parent())
-                #k = self.main.model_tree.model.indexFromItem(node)
-                #px = self.main.model_tree.proxyModel.mapFromSource(k)
-                #self.main.model_tree.treeView.selectionModel().setCurrentIndex(node.index(), QItemSelectionModel.ClearAndSelect)
-                #self.main.model_tree.treeView.setExpanded(px, True)
-                #self.main.model_tree.treeView.expandRecursively(k, -1)
-                #self.main.model_tree.treeView.setFirstColumnSpanned(1, k, True)
+            xml_node = get_xmlnode_from_tvnode(row[0])
+            dest_ref = get_xml_attribute(xml_node, 'DEST')
+            cache = self.main.get_cache_for(dest_ref)
+            if cache:
+                node = cache.getViewNode(ns)
+                show_node(self.main.model_tree.treeView, node)
+
+            #node = self.main.view_executable.cache.getViewNode(ns)
+            #show_node(self.main.model_tree.treeView, node)
         pass
 
 

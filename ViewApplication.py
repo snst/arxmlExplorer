@@ -48,4 +48,4 @@ class ViewApplication(ViewBase):
             self.show_executable_ref(item, s)
 
     def show_executable_ref(self, tv_parent, xml_node):
-        self.add_tv_row_detail(tv_parent, [getXmlContent(xml_node)], xml_node)
+        self.add_tv_row_detail(tv_parent, ['EXECUTABLE-REF', getXmlContent(xml_node)], xml_node)

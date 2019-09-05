@@ -42,4 +42,4 @@ class ViewProcess(ViewBase):
 
     def show_detail_data(self, my_tree, xml_node):
         s = xml_node
-        self.add_tv_row_detail(my_tree, ['Executable', getValueByNameT(s, 'EXECUTABLE-REF')], s)
+        self.add_tv_row_detail(my_tree, ['EXECUTABLE-REF', getValueByNameT(s, 'EXECUTABLE-REF')], findFirstChildNodeByName(s, 'EXECUTABLE-REF'))

@@ -140,3 +140,45 @@ def attach_xml_node(item, xml_node):
     if xml_node != None:
         item.setData(xml_node, Qt.UserRole + 1)
         pass
+
+
+def show_node(treeView, node):
+    if node:
+        proxy = treeView.model()
+        model = proxy.sourceModel()    
+        node_list = [node]
+        while node.parent():
+            node = node.parent()
+            node_list.insert(0, node)
+
+        for n in node_list:
+            k = model.indexFromItem(n)
+            index = proxy.mapFromSource(k)
+            treeView.setExpanded(index, True)
+            
+        treeView.scrollTo(index, True)
+        treeView.setCurrentIndex(index)
+
+def get_xml_attribute(xml_node, attr_name):
+    ret = None
+    if xml_node.attributes:
+        attr = xml_node.attributes[attr_name]
+        if attr:
+            ret = attr.firstChild.data;
+    return ret
+
+def get_text_from_tvnode(node):
+    ret = None
+    if node:
+        ret = node.data(Qt.DisplayRole)
+    return ret
+
+def get_xmlnode_from_tvnode(node):
+    ret = None
+    if node:
+        ret = node.data(Qt.UserRole + 1)
+    return ret
+
+def get_selected_tvnode_from_treeview(treeview):
+    index = treeview.selectionModel().selectedIndexes()
+    return index
