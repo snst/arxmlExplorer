@@ -28,14 +28,6 @@ class ViewExecutable(ViewBase):
     def show_detail_data(self, model, xml_node):
         pass
 
-    def add_to_treeview(self, parent, xml_node):
-        name = getShortName(xml_node)
-        namespace = getNameSpace(xml_node)
-        
-        item = self.cache.addViewSubNode(namespace, parent, name)
-        attach_xml_node(item, xml_node)
-        return item    
-
     def show_detail_impl(self, my_tree, xml_node):
         self.tree_view = my_tree.treeView
         self.clear_detail(my_tree)

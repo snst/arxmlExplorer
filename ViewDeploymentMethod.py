@@ -21,4 +21,5 @@ class ViewDeploymentMethod(ViewDeploymentBase):
 
     def show_detail_data(self, my_tree, xml_node):
         s = xml_node
-        self.add_tv_row_detail(my_tree, [getShortName(s), getValueByNameT(s, 'METHOD-ID'), getValueByNameT(s, 'TRANSPORT-PROTOCOL'), getValueByNameDeepT(s, 'METHOD-REF')], s)
+        self.add_tv_row_detail(my_tree, ['METHOD-REF', getValueByNameT(s, 'METHOD-REF')], findFirstChildNodeByName(s, 'METHOD-REF'))
+        self.add_tv_row_detail(my_tree, [getShortName(s), getValueByNameT(s, 'METHOD-ID'), getValueByNameT(s, 'TRANSPORT-PROTOCOL')], s)

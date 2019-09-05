@@ -18,14 +18,6 @@ class ViewField(ViewBase):
         ViewBase.__init__(self, 'FIELD', 'Fields',  view_root_node, cache)
         pass
 
-    def add_to_treeview(self, parent, xml_node):
-        name = getShortName(xml_node)
-        namespace = getNameSpace(xml_node)
-        item = self.cache.addViewSubNode(namespace, parent, name)
-        attach_xml_node(item, xml_node)
-        return item    
-
-
     def show_detail_data(self, view_node, xml_node):
         item = self.add_tv_row_detail(view_node, ['TYPE-TREF', getType(xml_node)])
         item = self.add_tv_row_detail(view_node, ['HAS-GETTER', getValueByNameT(xml_node, 'HAS-GETTER')])

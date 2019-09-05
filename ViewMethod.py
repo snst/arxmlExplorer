@@ -18,14 +18,6 @@ class ViewMethod(ViewBase):
         ViewBase.__init__(self, 'CLIENT-SERVER-OPERATION', 'Methods', view_root_node, cache)
         pass
 
-    def add_to_treeview(self, parent, xml_node):
-        name = getShortName(xml_node)
-        item = QStandardItem(name)
-        parent.appendRow([item, QStandardItem(''), QStandardItem(''), QStandardItem('')])
-        attach_xml_node(item, xml_node)
-        return item    
-
-
     def show_method_param(self, node, parent):
         item = QStandardItem(getShortName(node))
         #QStandardItem(getNameSpace(node))

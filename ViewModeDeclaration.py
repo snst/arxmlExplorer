@@ -25,17 +25,9 @@ class ViewModeDeclaration(ViewBase):
         ViewBase.__init__(self, 'MODE-DECLARATION-GROUP', None, view_root_node, cache)
         pass
 
-    def add_to_treeview(self, parent, xml_node):
-        name = getShortName(xml_node)
-        namespace = getNameSpace(xml_node)
-        
-        item = self.cache.addViewSubNode(namespace, parent, name)
-        attach_xml_node(item, xml_node)
-        return item    
-
     def show_detail_data(self, tv_node, xml_node):
 
-        self.add_tv_row_detail(tv_node, ['Initial Mode', getValueByNameT(xml_node,'INITIAL-MODE-REF')], xml_node)
+        self.add_tv_row_detail(tv_node, ['INITIAL-MODE-REF', getValueByNameT(xml_node,'INITIAL-MODE-REF')], findFirstChildNodeByName(xml_node, 'INITIAL-MODE-REF'))
 
         # mode refs
         item = self.add_tv_row_detail(tv_node, ['Mode Declarations'])
