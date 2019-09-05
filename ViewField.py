@@ -20,8 +20,8 @@ class ViewField(ViewBase):
 
     def add_to_treeview(self, parent, xml_node):
         name = getShortName(xml_node)
-        item = QStandardItem(name)
-        parent.appendRow([item, QStandardItem(''), QStandardItem(''), QStandardItem('')])
+        namespace = getNameSpace(xml_node)
+        item = self.cache.addViewSubNode(namespace, parent, name)
         attach_xml_node(item, xml_node)
         return item    
 

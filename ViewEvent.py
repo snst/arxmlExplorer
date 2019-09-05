@@ -18,14 +18,6 @@ class ViewEvent(ViewBase):
         ViewBase.__init__(self, 'VARIABLE-DATA-PROTOTYPE', 'Events', view_root_node, cache)
         pass
 
-    def add_to_treeview(self, parent, xml_node):
-        name = getShortName(xml_node)
-        item = QStandardItem(name)
-        parent.appendRow([item, QStandardItem(''), QStandardItem(''), QStandardItem('')])
-        attach_xml_node(item, xml_node)
-        return item    
-
-
     def show_detail_data(self, view_node, xml_node):
         item = self.add_tv_row_detail(view_node, ['TYPE-TREF', getType(xml_node)])
 

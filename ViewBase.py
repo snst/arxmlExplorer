@@ -98,3 +98,11 @@ class ViewBase():
         parent.appendRow(row)
         attach_xml_node(first_item, xml_node)
         return first_item
+
+
+    def add_to_treeview(self, parent, xml_node):
+        name = getShortName(xml_node)
+        namespace = getNameSpace(xml_node)
+        item = self.cache.addViewSubNode(namespace, parent, name)
+        attach_xml_node(item, xml_node)
+        return item    
