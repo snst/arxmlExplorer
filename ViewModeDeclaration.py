@@ -25,16 +25,26 @@ class ViewModeDeclaration(ViewBase):
         ViewBase.__init__(self, 'MODE-DECLARATION-GROUP', None, view_root_node, cache)
         pass
 
-    def show_detail_data(self, tv_node, xml_node):
-
-        self.add_tv_row_detail(tv_node, ['INITIAL-MODE-REF', getValueByNameT(xml_node,'INITIAL-MODE-REF')], findFirstChildNodeByName(xml_node, 'INITIAL-MODE-REF'))
-
+    def postprocess_node(self, tv_node, xml_node):
         # mode refs
-        item = self.add_tv_row_detail(tv_node, ['Mode Declarations'])
+        item = self.add_tv_row_detail(tv_node, ['MODE-DECLARATION'])
         #method arguments
         itemlist = xml_node.getElementsByTagName('MODE-DECLARATION')
         for s in itemlist:
             self.show_machine_state(item, s)
+
+        pass
+
+    def show_detail_data(self, tv_node, xml_node):
+
+        self.add_tv_row_detail(tv_node, ['INITIAL-MODE-REF', getValueByNameT(xml_node,'INITIAL-MODE-REF')], findFirstChildNodeByName(xml_node, 'INITIAL-MODE-REF'))
+
+        """# mode refs
+        item = self.add_tv_row_detail(tv_node, ['Mode Declarations'])
+        #method arguments
+        itemlist = xml_node.getElementsByTagName('MODE-DECLARATION')
+        for s in itemlist:
+            self.show_machine_state(item, s)"""
 
     def show_machine_state(self, tv_parent, xml_node):
         self.add_tv_row_detail(tv_parent, [getShortName(xml_node), getValueByNameT(xml_node, 'VALUE')], xml_node)

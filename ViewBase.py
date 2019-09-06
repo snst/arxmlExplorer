@@ -46,8 +46,11 @@ class ViewBase():
         itemlist = xml_node.getElementsByTagName(self.xml_tag_name)
         for s in itemlist:
             tv_parent = self.get_tv_namespace_node(s, file)
-            self.add_to_treeview(tv_parent, s)
+            tv_node = self.add_to_treeview(tv_parent, s)
+            self.postprocess_node(tv_node, s)
 
+    def postprocess_node(self, tv_node, xml_node):
+        pass
 
     def add_tv_namespace_node(self, parent, namespace, file, xml_node):
         item = QStandardItem(namespace)
