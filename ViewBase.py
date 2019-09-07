@@ -47,10 +47,13 @@ class ViewBase():
         for s in itemlist:
             tv_parent = self.get_tv_namespace_node(s, file)
             tv_node = self.add_to_treeview(tv_parent, s)
-            self.postprocess_node(tv_node, s)
+            namespace = getNameSpace(s)
+            self.postprocess_node(namespace, tv_node, s)
 
-    def postprocess_node(self, tv_node, xml_node):
+
+    def postprocess_node(self, namespace, tv_node, xml_node):
         pass
+
 
     def add_tv_namespace_node(self, parent, namespace, file, xml_node):
         item = QStandardItem(namespace)
@@ -106,6 +109,14 @@ class ViewBase():
     def add_to_treeview(self, parent, xml_node):
         name = getShortName(xml_node)
         namespace = getNameSpace(xml_node)
-        item = self.cache.addViewSubNode(namespace, parent, name)
+        item = self.cache.addViewSubNode(namespace, parent, name, xml_node.localName)
         attach_xml_node(item, xml_node)
         return item    
+
+
+    def add_subnodes(self, tv_parent, xml_parent, tag_name):
+        itemlist = xml_parent.getElementsByTagName(tag_name)
+        for s in itemlist:
+            namespace = getNameSpace(s)
+            node = self.add_tv_row_detail(tv_parent, [getShortName(s), tag_name], s)
+            self.cache.add(tag_name, [namespace, getShortName(s)], node)   

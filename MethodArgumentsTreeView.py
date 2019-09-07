@@ -48,6 +48,9 @@ class MethodArgumentsTreeView():
             if cache:
                 node = cache.getViewNode(ns)
                 show_node(self.main.model_tree.treeView, node)
+            else:
+                node = self.main.cache.get(dest_ref, ns)
+                show_node(self.main.model_tree.treeView, node)
 
             #node = self.main.view_executable.cache.getViewNode(ns)
             #show_node(self.main.model_tree.treeView, node)

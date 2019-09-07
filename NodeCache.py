@@ -12,7 +12,7 @@ QGroupBox, QHBoxLayout, QLabel, QLineEdit, QTreeView, QVBoxLayout,
 QWidget, QPushButton, QDialog, QPlainTextEdit, QTabWidget)
 from xml.dom import minidom
 
-class NamespaceCache():
+class NodeCache():
     def __init__(self):
         self.dict = {}
         pass
@@ -37,3 +37,34 @@ class NamespaceCache():
     def getViewSubNode(self, namespace, sub_node_name):
         node = self.dict.get(namespace + '::' + sub_node_name)
         return node
+
+    def add(self, type_name, namespace, sub_node_name, node):
+        d = self.dict.get(type_name)
+        if not d:
+            d = {}
+            self.dict[type_name] = d
+        d[namespace + '::' + sub_node_name] = node
+
+    def get(self, type_name, name):
+        ret = None
+        d = self.dict.get(type_name)
+        if d:
+            ret = d.get(name)
+        return ret
+
+    def get_cache(self, type_name):
+        ret = self.dict.get(type_name)
+        if not ret:
+            ret = {}
+            self.dict[type_name] = ret
+        return ret
+
+    def add(self, cache_name, names, node):
+        cache = self.get_cache(cache_name)
+        if type(names) == list:
+            name = names[0]
+            for n in names[1:]:
+                name = name + "::" + n
+        else:
+            name = names
+        cache[name] = node

@@ -15,6 +15,7 @@ from MethodArgumentsTreeView import *
 from arxmlHelper import *
 from MethodErrorListWidget import *
 from NamespaceCache import *
+from NodeCache import *
 from ViewError import *
 from ViewDataType import *
 from ViewMethod import *
@@ -42,6 +43,7 @@ class App(QWidget):
         self.height = 700
         self.model_cache = NamespaceCache()
         self.deploy_cache = NamespaceCache()
+        self.cache = NodeCache()
         self.views = []
         self.initUI()
         path = './models/demo5'
@@ -84,7 +86,7 @@ class App(QWidget):
         self.view_field = self.add_view(ViewField(self.model_tree.root_node_model, self.model_cache))
         #self.view_machine = self.add_view(ViewMachine(self.model_tree.model))
         self.view_deployment = self.add_view(ViewDeployment(self.model_tree.root_node_deployment, self.deploy_cache))
-        self.view_mode_declaration = self.add_view(ViewModeDeclaration(self.model_tree.root_node_modes, None))
+        self.view_mode_declaration = self.add_view(ViewModeDeclaration(self.model_tree.root_node_modes, self.cache))
         self.view_ethernet = self.add_view(ViewEthernet(self.model_tree.root_node_ethernet, None))
         self.view_machine = self.add_view(ViewMachine(self.model_tree.root_node_machine, None))
 
