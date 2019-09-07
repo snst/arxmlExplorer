@@ -41,5 +41,5 @@ class ViewApplication(ViewBase):
             self.add_tv_row_detail(item, ['EXECUTABLE-REF', getXmlContent(s)], s)"""
 
 
-    #def node_added(self, namespace, tv_node, xml_node):
+    #def node_added(self, tv_node, xml_node):
     #    self.add_subnodes(tv_node, xml_node, 'EXECUTABLE-REF')

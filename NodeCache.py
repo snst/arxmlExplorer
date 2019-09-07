@@ -31,11 +31,11 @@ class NodeCache():
         else:
             view_node.appendRow(node)
 
-        self.dict[namespace + '::' + sub_node_name] = node
+        self.dict[namespace + '/' + sub_node_name] = node
         return node
 
     def getViewSubNode(self, namespace, sub_node_name):
-        node = self.dict.get(namespace + '::' + sub_node_name)
+        node = self.dict.get(namespace + '/' + sub_node_name)
         return node
 
     def add(self, type_name, namespace, sub_node_name, node):
@@ -43,7 +43,7 @@ class NodeCache():
         if not d:
             d = {}
             self.dict[type_name] = d
-        d[namespace + '::' + sub_node_name] = node
+        d[namespace + '/' + sub_node_name] = node
 
     def get(self, type_name, name):
         ret = None
@@ -65,7 +65,7 @@ class NodeCache():
             name = names[0]
             for n in names[1:]:
                 if n:
-                    name = name + "::" + n
+                    name = name + '/' + n
         else:
             name = names
         cache[name] = node

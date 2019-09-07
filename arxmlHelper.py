@@ -23,6 +23,8 @@ def getValueByNameDeep(node, name):
 def getValueByNameDeepT(node, name):
     return [getValueByNameDeep(node, name), name]
 
+def getChild(node, name):
+    return findFirstChildNodeByName(node, name)
 
 def findFirstChildNodeByName(parent, name):
     for node in parent.childNodes:
@@ -105,7 +107,7 @@ def getNameSpace2(node):
 
     if nodeName != None:
         if namespace != '':
-            namespace = namespace + '::'
+            namespace = namespace + '/'
         return namespace + nodeName
     else:
         return namespace
@@ -119,7 +121,7 @@ def getNameSpaceIntern(node):
         parentNameSpace = getNameSpaceIntern(node.parentNode)
 
     if (parentNameSpace != None) and (localNameSpace != None):
-        return parentNameSpace + "::" + localNameSpace
+        return parentNameSpace + '/' + localNameSpace
     elif parentNameSpace != None:
         return parentNameSpace
     elif localNameSpace != None:

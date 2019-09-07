@@ -30,7 +30,7 @@ class ViewEthernet(ViewBase):
     def show_detail_default(self, model, xml_node):
         pass
 
-    def node_added(self, namespace, tv_node, xml_node):
+    def node_added(self, tv_node, xml_node):
         self.add_subnodes(tv_node, xml_node, 'ETHERNET-PHYSICAL-CHANNEL')
         pass
 

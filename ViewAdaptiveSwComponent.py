@@ -27,7 +27,7 @@ class ViewAdaptiveSwComponent(ViewBase):
         self.register_detail_func("R-PORT-PROTOTYPE", self.show_detail_r_port)
 
 
-    def node_added(self, namespace, tv_node, xml_node):
+    def node_added(self, tv_node, xml_node):
         self.add_subnodes(tv_node, xml_node, 'P-PORT-PROTOTYPE')
         self.add_subnodes(tv_node, xml_node, 'R-PORT-PROTOTYPE')
         pass

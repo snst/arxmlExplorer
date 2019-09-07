@@ -34,9 +34,9 @@ class NamespaceCache():
         else:
             view_node.appendRow(node)
 
-        self.dict[namespace + '::' + sub_node_name] = node
+        self.dict[namespace + '/' + sub_node_name] = node
         return node
 
     def getViewSubNode(self, namespace, sub_node_name):
-        node = self.dict.get(namespace + '::' + sub_node_name)
+        node = self.dict.get(namespace + '/' + sub_node_name)
         return node

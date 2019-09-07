@@ -47,14 +47,18 @@ class ViewBase():
             return ns_node
 
 
-    def parse(self, xml_node, file):
+    def parse(self, xml_node, filename):
         itemlist = xml_node.getElementsByTagName(self.xml_tag_name)
         for s in itemlist:
             namespace = getNameSpace(s)
-            tv_parent = self.get_tv_node_with_namespace(namespace)
-            tv_node = self.add_to_treeview(tv_parent, s, file)
-            self.node_added(namespace, tv_node, s)
-            #self.subnode_added(tv_node, s, self.xml_tag_name)
+            #tv_parent = self.get_tv_node_with_namespace(namespace)
+            #tv_node = self.add_to_treeview(tv_parent, s, file)
+            name = getShortName(s)
+            node = QStandardItem(s.localName)
+            self.view_root_node.appendRow([node, QStandardItem(namespace + '/' + name), QStandardItem(filename)])
+            #self.cache.add(self.xml_tag_name, [namespace, name], node)
+            attach_xml_node(node, s)
+            self.node_added(node, s)
 
 
     def get_tv_node_with_namespace(self, namespace):
@@ -72,7 +76,7 @@ class ViewBase():
         return tv_node
 
 
-    def node_added(self, namespace, tv_node, xml_node):
+    def node_added(self, tv_node, xml_node):
         pass
 
 
@@ -153,8 +157,11 @@ class ViewBase():
         itemlist = xml_parent.getElementsByTagName(tag_name)
         for s in itemlist:
             namespace = getNameSpace(s)
+            name = getShortName(s)
+            if namespace and name:
+                name = namespace + '/' + name
 #            node = self.add_tv_row_detail(tv_parent, [getShortName(s), tag_name], s)
-            node = self.add_tv_row_detail(tv_parent, [tag_name, getShortName(s)], s)
+            node = self.add_tv_row_detail(tv_parent, [tag_name, name], s)
             self.cache.add(tag_name, [namespace, getShortName(s)], node)   
             self.subnode_added(node, s, tag_name)
 

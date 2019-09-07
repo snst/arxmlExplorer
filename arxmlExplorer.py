@@ -80,22 +80,25 @@ class App(QWidget):
         self.setLayout(mainLayout)
         mainLayout.addWidget(self.splitter1)
         self.show()
+        """
         self.view_error = self.add_view(ViewError(self.model_tree.root_node_model, self.model_cache))
         self.view_datatype = self.add_view(ViewDataType(self.model_tree.root_node_model))
         self.view_method = self.add_view(ViewMethod(self.model_tree.root_node_model, self.model_cache))
         self.view_event = self.add_view(ViewEvent(self.model_tree.root_node_model, self.model_cache))
         self.view_field = self.add_view(ViewField(self.model_tree.root_node_model, self.model_cache))
-        ##self.view_machine = self.add_view(ViewMachine(self.model_tree.model))
         self.view_deployment = self.add_view(ViewDeployment(self.model_tree.root_node_deployment, self.deploy_cache))
-        self.view_mode_declaration = self.add_view(ViewModeDeclaration(self.model_tree.root_node_machine, self.cache))
-        self.view_ethernet = self.add_view(ViewEthernet(self.model_tree.root_node_ethernet, self.cache))
-        self.view_machine = self.add_view(ViewMachine(self.model_tree.root_node_machine, self.cache))
 
-        self.view_executable = self.add_view(ViewExecutable(self.model_tree.root_node_executable, self.cache))
-        self.view_process = self.add_view(ViewProcess(self.model_tree.root_node_process, self.cache))
-        self.view_startup_config = self.add_view(ViewStartupConfig(self.model_tree.root_node_startup_config, self.cache))
-        self.view_application = self.add_view(ViewApplication(self.model_tree.root_node_application, self.cache))
-        self.view_adaptive_sw_component = self.add_view(ViewAdaptiveSwComponent(self.model_tree.root_node_adaptive_sw_component, self.cache))
+        """
+
+        self.view_executable = self.add_view(ViewExecutable(self.model_tree.root_node_application_design, self.cache))
+        self.view_process = self.add_view(ViewProcess(self.model_tree.root_node_application_manifest, self.cache))
+        self.view_startup_config = self.add_view(ViewStartupConfig(self.model_tree.root_node_application_manifest, self.cache))
+        self.view_application = self.add_view(ViewApplication(self.model_tree.root_node_application_design, self.cache))
+        self.view_adaptive_sw_component = self.add_view(ViewAdaptiveSwComponent(self.model_tree.root_node_application_design, self.cache))
+
+        self.view_mode_declaration = self.add_view(ViewModeDeclaration(self.model_tree.root_node_machine_manifest, self.cache))
+        self.view_machine = self.add_view(ViewMachine(self.model_tree.root_node_machine_manifest, self.cache))
+        self.view_ethernet = self.add_view(ViewEthernet(self.model_tree.root_node_machine_manifest, self.cache))
 
 
     def get_cache_for(self, name):

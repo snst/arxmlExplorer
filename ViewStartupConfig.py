@@ -25,7 +25,7 @@ class ViewStartupConfig(ViewBase):
         ViewBase.__init__(self, 'STARTUP-CONFIG-SET', None, view_root_node, cache)
         self.register_detail_func("STARTUP-CONFIG", self.show_detail_startup_config)
 
-    def node_added(self, namespace, tv_node, xml_node):
+    def node_added(self, tv_node, xml_node):
         self.add_subnodes(tv_node, xml_node, 'STARTUP-CONFIG')
  
     def show_detail_startup_config(self, tree_view, xml_node):

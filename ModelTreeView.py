@@ -57,14 +57,10 @@ class ModelTreeView():
 
         self.root_node_model = self.add_main_node('Model')
         self.root_node_deployment = self.add_main_node('Deployment')
-        self.root_node_modes = self.add_main_node('Modes')
-        self.root_node_ethernet = self.add_main_node('Ethernet')
-        self.root_node_machine = self.add_main_node('Machine')
-        self.root_node_application = self.add_main_node('Application')
-        self.root_node_adaptive_sw_component = self.add_main_node('Adaptive SW Component')
-        self.root_node_process = self.add_main_node('Process')
-        self.root_node_executable = self.add_main_node('Executable')
-        self.root_node_startup_config = self.add_main_node('Startup Config')
+        self.root_node_machine_manifest = self.add_main_node('Machine Manifest')
+        self.root_node_application_design = self.add_main_node('Application Design')
+        self.root_node_application_manifest = self.add_main_node('Application Manifest')
+        
         pass
 
     def add_main_node(self, name):
@@ -103,7 +99,7 @@ class ModelTreeView():
             #l = self.node_application_errors.takeRow(i)
             err = n.child(i,2).data(Qt.DisplayRole) + "/" + n.child(i,0).data(Qt.DisplayRole)
             err_no = n.child(i,1).data(Qt.DisplayRole)
-            err = "/" + err.replace("::", "/")
+            #err = "/" + err.replace('/', "/")
             if name == err:
                 #print(err)
                 #print(err_no)

@@ -40,7 +40,7 @@ class MethodArgumentsTreeView():
         row = get_selected_tvnode_from_treeview(self.treeView)
         if row:
             text = get_text_from_tvnode(row[1])
-            ns = text[1:].replace('/', '::')
+            ns = text[1:].replace('/', '/')
 
             xml_node = get_xmlnode_from_tvnode(row[0])
             dest_ref = get_xml_attribute(xml_node, 'DEST')

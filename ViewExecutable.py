@@ -26,7 +26,7 @@ class ViewExecutable(ViewBase):
         self.register_detail_func("ROOT-SW-COMPONENT-PROTOTYPE", self.show_detail_root_sw)
 
 
-    def node_added(self, namespace, tv_node, xml_node):
+    def node_added(self, tv_node, xml_node):
         self.add_subnodes(tv_node, xml_node, 'ROOT-SW-COMPONENT-PROTOTYPE')
 
 
