@@ -20,17 +20,27 @@ from ViewDeploymentEventGroup import *
 from NamespaceCache import *
 
 
-class ViewStartupConfig(ViewBase):
+class ViewAdaptiveSwComponent(ViewBase):
     def __init__(self, view_root_node, cache):
-        ViewBase.__init__(self, 'STARTUP-CONFIG-SET', None, view_root_node, cache)
-        self.register_detail_func("STARTUP-CONFIG", self.show_detail_startup_config)
+        ViewBase.__init__(self, 'ADAPTIVE-APPLICATION-SW-COMPONENT-TYPE', None, view_root_node, cache)
+        self.register_detail_func("P-PORT-PROTOTYPE", self.show_detail_p_port)
+        self.register_detail_func("R-PORT-PROTOTYPE", self.show_detail_r_port)
+
 
     def node_added(self, namespace, tv_node, xml_node):
-        self.add_subnodes(tv_node, xml_node, 'STARTUP-CONFIG')
- 
-    def show_detail_startup_config(self, tree_view, xml_node):
-        self.add_value(tree_view, xml_node, 'SCHEDULING-POLICY')
-        self.add_value(tree_view, xml_node, 'SCHEDULING-PRIORITY')
-
-    def show_detail_default(self, tree_view, xml_node):
+        self.add_subnodes(tv_node, xml_node, 'P-PORT-PROTOTYPE')
+        self.add_subnodes(tv_node, xml_node, 'R-PORT-PROTOTYPE')
         pass
+
+
+    def show_detail_default(self, tv_node, xml_node):
+        #self.add_value(tree_view, xml_node, 'TRANSFORMATION-PROPS-MAPPING-SET-REF')
+        pass
+
+
+    def show_detail_p_port(self, tv_node, xml_node):
+        self.add_value(tv_node, xml_node, 'PROVIDED-INTERFACE-TREF')
+
+
+    def show_detail_r_port(self, tv_node, xml_node):
+        self.add_value(tv_node, xml_node, 'REQUIRED-INTERFACE-TREF')

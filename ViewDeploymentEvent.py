@@ -19,7 +19,7 @@ class ViewDeploymentEvent(ViewDeploymentBase):
         ViewDeploymentBase.__init__(self, 'SOMEIP-EVENT-DEPLOYMENT', 'Events', view_root_node, cache)
         pass
 
-    def show_detail_data(self, my_tree, xml_node):
+    def show_detail_default(self, my_tree, xml_node):
         s = xml_node
         self.add_tv_row_detail(my_tree, ['EVENT-REF', getValueByNameT(s, 'EVENT-REF')], findFirstChildNodeByName(s, 'EVENT-REF'))
         self.add_tv_row_detail(my_tree, [getShortName(s), getValueByNameT(s, 'EVENT-ID'), getValueByNameT(s, 'TRANSPORT-PROTOCOL')], s)

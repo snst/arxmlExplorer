@@ -24,7 +24,7 @@ class MethodArgumentsTreeView():
         dataLayout.addWidget(self.treeView)
         self.groupDataTypes.setLayout(dataLayout)
         self.model = None
-        self.clear_obsolete()
+        self.clear()
         self.main = main
         pass
 
@@ -44,13 +44,17 @@ class MethodArgumentsTreeView():
 
             xml_node = get_xmlnode_from_tvnode(row[0])
             dest_ref = get_xml_attribute(xml_node, 'DEST')
-            cache = self.main.get_cache_for(dest_ref)
+
+            node = self.main.cache.get(dest_ref, ns)
+            show_node(self.main.model_tree.treeView, node)
+
+            """cache = self.main.get_cache_for(dest_ref)
             if cache:
                 node = cache.getViewNode(ns)
                 show_node(self.main.model_tree.treeView, node)
             else:
                 node = self.main.cache.get(dest_ref, ns)
-                show_node(self.main.model_tree.treeView, node)
+                show_node(self.main.model_tree.treeView, node)"""
 
             #node = self.main.view_executable.cache.getViewNode(ns)
             #show_node(self.main.model_tree.treeView, node)
@@ -71,26 +75,10 @@ class MethodArgumentsTreeView():
         attach_xml_node(item, xml_node)
         return item
 
-
-
-    def clear_obsolete(self):
-        if self.model != None:
-            self.model.clear()
-        self.model = QStandardItemModel(0, 6, None)
-        self.model.setHeaderData(0, Qt.Horizontal, "Name")
-        self.model.setHeaderData(1, Qt.Horizontal, "Category")
-        self.model.setHeaderData(2, Qt.Horizontal, "Size")
-        self.model.setHeaderData(3, Qt.Horizontal, "Semantic")
-        self.model.setHeaderData(4, Qt.Horizontal, "Ref Dest")
-        self.model.setHeaderData(5, Qt.Horizontal, "Source")
+    def clear(self):
+        self.model = QStandardItemModel(0, 2, None)
+        self.model.setHeaderData(0, Qt.Horizontal, 'Name')
+        self.model.setHeaderData(1, Qt.Horizontal, 'Value')
         self.treeView.setModel(self.model)
         self.treeView.setColumnWidth(0, 200)
-        self.treeView.setColumnWidth(1, 150)
-        self.treeView.setColumnWidth(4, 250)
-        pass
-
-    def clear(self):
-        if self.model != None:
-            self.model.clear()
-        self.model = QStandardItemModel(0, 1, None)
 

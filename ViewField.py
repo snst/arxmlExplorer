@@ -18,7 +18,7 @@ class ViewField(ViewBase):
         ViewBase.__init__(self, 'FIELD', 'Fields',  view_root_node, cache)
         pass
 
-    def show_detail_data(self, view_node, xml_node):
+    def show_detail_default(self, view_node, xml_node):
         item = self.add_tv_row_detail(view_node, ['TYPE-TREF', getType(xml_node)])
         item = self.add_tv_row_detail(view_node, ['HAS-GETTER', getValueByNameT(xml_node, 'HAS-GETTER')])
         item = self.add_tv_row_detail(view_node, ['HAS-NOTIFIER', getValueByNameT(xml_node, 'HAS-NOTIFIER')])

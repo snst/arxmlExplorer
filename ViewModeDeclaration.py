@@ -22,13 +22,13 @@ from NamespaceCache import *
 
 class ViewModeDeclaration(ViewBase):
     def __init__(self, view_root_node, cache):
-        ViewBase.__init__(self, 'MODE-DECLARATION-GROUP', None, view_root_node, cache)
+        ViewBase.__init__(self, 'MODE-DECLARATION-GROUP', 'machine', view_root_node, cache)
 
 
-    def postprocess_node(self, namespace, tv_node, xml_node):
+    def node_added(self, namespace, tv_node, xml_node):
         self.add_subnodes(tv_node, xml_node, 'MODE-DECLARATION')
  
  
-    def show_detail_data(self, tv_node, xml_node):
+    def show_detail_default(self, tv_node, xml_node):
         self.add_tv_row_detail(tv_node, ['INITIAL-MODE-REF', getValueByNameT(xml_node,'INITIAL-MODE-REF')], findFirstChildNodeByName(xml_node, 'INITIAL-MODE-REF'))
 

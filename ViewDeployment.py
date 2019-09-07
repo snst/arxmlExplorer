@@ -29,7 +29,7 @@ class ViewDeployment(ViewBase):
         self.view_deployment_event_group = ViewDeploymentEventGroup(view_root_node, cache)
         pass
 
-    def show_detail_data(self, model, xml_node):
+    def show_detail_default(self, model, xml_node):
         item = self.add_tv_row_detail(model, ['Service Interface Id', getValueByNameT(xml_node, 'SERVICE-INTERFACE-ID')])
         item = self.add_tv_row_detail(model, ['SERVICE-INTERFACE-REF', getValueByNameT(xml_node, 'SERVICE-INTERFACE-REF')])
         version_node = findFirstChildNodeByName(xml_node, 'SERVICE-INTERFACE-VERSION')
@@ -52,10 +52,10 @@ class ViewDeployment(ViewBase):
 
         return item    
 
-    def show_detail_impl(self, my_tree, xml_node):
+    def show_detail_default(self, my_tree, xml_node):
         self.tree_view = my_tree.treeView
         self.clear_detail(my_tree)
-        self.show_detail_data(my_tree.model, xml_node)
+        self.show_detail_default(my_tree.model, xml_node)
         my_tree.treeView.expandAll()
 
     def clear_detail(self, my_tree):
@@ -78,5 +78,5 @@ class ViewDeployment(ViewBase):
 
         if xml_node.localName != self.xml_tag_name:
             return False
-        self.show_detail_impl(my_tree, xml_node)
+        self.show_detail_default(my_tree, xml_node)
         return True

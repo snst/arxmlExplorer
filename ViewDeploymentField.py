@@ -19,7 +19,7 @@ class ViewDeploymentField(ViewDeploymentBase):
         ViewDeploymentBase.__init__(self, 'SOMEIP-FIELD-DEPLOYMENT', 'Fields', view_root_node, cache)
         pass
 
-    def show_detail_data(self, my_tree, xml_node):
+    def show_detail_default(self, my_tree, xml_node):
         s = xml_node
         self.add_tv_row_detail(my_tree, ['FIELD-REF', getValueByNameT(s, 'FIELD-REF')], findFirstChildNodeByName(s, 'FIELD-REF'))
 

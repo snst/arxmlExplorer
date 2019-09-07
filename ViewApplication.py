@@ -25,19 +25,21 @@ class ViewApplication(ViewBase):
         ViewBase.__init__(self, 'ADAPTIVE-AUTOSAR-APPLICATION', None, view_root_node, cache)
         pass
 
-    def show_detail_impl(self, my_tree, xml_node):
-        self.tree_view = my_tree.treeView
-        self.clear_detail(my_tree)
-        self.show_detail_data(my_tree.model, xml_node)
-        my_tree.treeView.expandAll()
 
-    def show_detail_data(self, model, xml_node):
+    def show_detail_default(self, tv_node, xml_node):
+        self.add_value(tv_node, xml_node, 'CATEGORY')
+
+        itemlist = xml_node.getElementsByTagName('EXECUTABLE-REF')
+        for s in itemlist:
+            self.add_tv_row_detail(tv_node, ['EXECUTABLE-REF', getXmlContent(s)], s)
+
         # executables refs
-        item = self.add_tv_row_detail(model, ['Executables'])
+        """item = self.add_tv_row_detail(model, ['Executables'])
         #method arguments
         itemlist = xml_node.getElementsByTagName('EXECUTABLE-REF')
         for s in itemlist:
-            self.show_executable_ref(item, s)
+            self.add_tv_row_detail(item, ['EXECUTABLE-REF', getXmlContent(s)], s)"""
 
-    def show_executable_ref(self, tv_parent, xml_node):
-        self.add_tv_row_detail(tv_parent, ['EXECUTABLE-REF', getXmlContent(xml_node)], xml_node)
+
+    #def node_added(self, namespace, tv_node, xml_node):
+    #    self.add_subnodes(tv_node, xml_node, 'EXECUTABLE-REF')

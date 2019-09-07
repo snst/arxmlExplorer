@@ -24,6 +24,9 @@ class NamespaceCache():
         node = self.dict.get(namespace)
         return node
 
+    def get(self, name, namespace):
+        return self.getViewNode(namespace)
+
     def addViewSubNode(self, namespace, view_node, sub_node_name, column2=None):
         node = QStandardItem(sub_node_name)
         if column2:

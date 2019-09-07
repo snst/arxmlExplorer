@@ -23,12 +23,16 @@ from NamespaceCache import *
 class ViewExecutable(ViewBase):
     def __init__(self, view_root_node, cache):
         ViewBase.__init__(self, 'EXECUTABLE', None, view_root_node, cache)
-        pass
+        self.register_detail_func("ROOT-SW-COMPONENT-PROTOTYPE", self.show_detail_root_sw)
 
 
-    def postprocess_node(self, namespace, tv_node, xml_node):
+    def node_added(self, namespace, tv_node, xml_node):
         self.add_subnodes(tv_node, xml_node, 'ROOT-SW-COMPONENT-PROTOTYPE')
 
 
-    def show_detail_data(self, model, xml_node):
-        pass
+    def show_detail_default(self, tree_view, xml_node):
+        self.add_value(tree_view, xml_node, 'TRANSFORMATION-PROPS-MAPPING-SET-REF')
+
+
+    def show_detail_root_sw(self, tree_view, xml_node):
+        self.add_value(tree_view, xml_node, 'APPLICATION-TYPE-TREF')

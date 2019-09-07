@@ -18,7 +18,7 @@ class ViewEvent(ViewBase):
         ViewBase.__init__(self, 'VARIABLE-DATA-PROTOTYPE', 'Events', view_root_node, cache)
         pass
 
-    def show_detail_data(self, view_node, xml_node):
+    def show_detail_default(self, view_node, xml_node):
         item = self.add_tv_row_detail(view_node, ['TYPE-TREF', getType(xml_node)])
 
 

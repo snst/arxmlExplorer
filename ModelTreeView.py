@@ -50,6 +50,7 @@ class ModelTreeView():
 
         self.treeView.setModel(self.proxyModel)
         self.treeView.setColumnWidth(0, 350)
+        self.treeView.setColumnWidth(1, 200)
         self.treeView.setColumnWidth(2, 250)
 
 
@@ -60,6 +61,7 @@ class ModelTreeView():
         self.root_node_ethernet = self.add_main_node('Ethernet')
         self.root_node_machine = self.add_main_node('Machine')
         self.root_node_application = self.add_main_node('Application')
+        self.root_node_adaptive_sw_component = self.add_main_node('Adaptive SW Component')
         self.root_node_process = self.add_main_node('Process')
         self.root_node_executable = self.add_main_node('Executable')
         self.root_node_startup_config = self.add_main_node('Startup Config')

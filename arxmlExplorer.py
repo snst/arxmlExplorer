@@ -31,6 +31,7 @@ from ViewProcess import *
 from ViewExecutable import *
 from ViewStartupConfig import *
 from ViewApplication import *
+from ViewAdaptiveSwComponent import *
 
 class App(QWidget):
   
@@ -46,7 +47,7 @@ class App(QWidget):
         self.cache = NodeCache()
         self.views = []
         self.initUI()
-        path = './models/demo5'
+        path = './models/demo7'
         files = [f for f in os.listdir(path) if os.path.isfile(path + '/' + f)]
         for f in files:
             if f.endswith('.arxml'):
@@ -84,16 +85,18 @@ class App(QWidget):
         self.view_method = self.add_view(ViewMethod(self.model_tree.root_node_model, self.model_cache))
         self.view_event = self.add_view(ViewEvent(self.model_tree.root_node_model, self.model_cache))
         self.view_field = self.add_view(ViewField(self.model_tree.root_node_model, self.model_cache))
-        #self.view_machine = self.add_view(ViewMachine(self.model_tree.model))
+        ##self.view_machine = self.add_view(ViewMachine(self.model_tree.model))
         self.view_deployment = self.add_view(ViewDeployment(self.model_tree.root_node_deployment, self.deploy_cache))
-        self.view_mode_declaration = self.add_view(ViewModeDeclaration(self.model_tree.root_node_modes, self.cache))
-        self.view_ethernet = self.add_view(ViewEthernet(self.model_tree.root_node_ethernet, None))
-        self.view_machine = self.add_view(ViewMachine(self.model_tree.root_node_machine, None))
+        self.view_mode_declaration = self.add_view(ViewModeDeclaration(self.model_tree.root_node_machine, self.cache))
+        self.view_ethernet = self.add_view(ViewEthernet(self.model_tree.root_node_ethernet, self.cache))
+        self.view_machine = self.add_view(ViewMachine(self.model_tree.root_node_machine, self.cache))
 
         self.view_executable = self.add_view(ViewExecutable(self.model_tree.root_node_executable, self.cache))
         self.view_process = self.add_view(ViewProcess(self.model_tree.root_node_process, self.cache))
         self.view_startup_config = self.add_view(ViewStartupConfig(self.model_tree.root_node_startup_config, self.cache))
         self.view_application = self.add_view(ViewApplication(self.model_tree.root_node_application, self.cache))
+        self.view_adaptive_sw_component = self.add_view(ViewAdaptiveSwComponent(self.model_tree.root_node_adaptive_sw_component, self.cache))
+
 
     def get_cache_for(self, name):
         for view in self.views:
@@ -113,9 +116,11 @@ class App(QWidget):
         if xml_node != None:
             self.show_xml(xml_node)
             for item in self.views:
-                if item.show_detail(self.detail, xml_node):
+                if item.show_detail(self.detail.model, xml_node):
                     return
-
+            return
+        self.detail.treeView.expandAll()
+        self.plaintext_xml.setPlainText('')
 
     def show_xml(self, node):
         str = node.toprettyxml(indent=' ', newl='')

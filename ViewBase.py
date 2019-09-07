@@ -23,57 +23,89 @@ class ViewBase():
         self.xml_tag_name = xml_tag_name
         self.view_name = view_name
         self.view_root_node = view_root_node
+        self.detail_funcs = { self.xml_tag_name: self.show_detail_default }
 
+    def register_detail_func(self, tag, func):
+        self.detail_funcs[tag] = func
+
+    def show_detail_default(self, tree_view, xml_node):
+        pass
 
     def get_tv_namespace_node(self, xml_node, file):
         namespace = getNameSpace(xml_node)
-        view_namespace_node = self.cache.getViewNode(namespace)
-        if not view_namespace_node:
-            view_namespace_node = self.add_tv_namespace_node(self.view_root_node, namespace, file, xml_node)
-            #attach_xml_node(view_namespace_node, xml_node)
-            self.cache.addViewNode(namespace, view_namespace_node)
+        ns_node = self.cache.getViewNode(namespace)
+        if not ns_node:
+            ns_node = self.add_tv_namespace_node(self.view_root_node, namespace, None)
+            self.cache.addViewNode(namespace, ns_node)
 
         if self.view_name:
             node = self.cache.getViewSubNode(namespace, self.view_name)
             if not node:
-                node = self.cache.addViewSubNode(namespace, view_namespace_node, self.view_name)
+                node = self.cache.addViewSubNode(namespace, ns_node, self.view_name)
             return node
         else:
-            return view_namespace_node
+            return ns_node
 
 
     def parse(self, xml_node, file):
         itemlist = xml_node.getElementsByTagName(self.xml_tag_name)
         for s in itemlist:
-            tv_parent = self.get_tv_namespace_node(s, file)
-            tv_node = self.add_to_treeview(tv_parent, s)
             namespace = getNameSpace(s)
-            self.postprocess_node(namespace, tv_node, s)
+            tv_parent = self.get_tv_node_with_namespace(namespace)
+            tv_node = self.add_to_treeview(tv_parent, s, file)
+            self.node_added(namespace, tv_node, s)
+            #self.subnode_added(tv_node, s, self.xml_tag_name)
 
 
-    def postprocess_node(self, namespace, tv_node, xml_node):
+    def get_tv_node_with_namespace(self, namespace):
+        tv_node = self.cache.get(self.xml_tag_name, namespace)
+        if not tv_node:
+            tv_node = self.add_tv_namespace_node(self.view_root_node, namespace, None)
+            self.cache.add(self.xml_tag_name, namespace, tv_node)
+
+        """if self.view_name:
+            node = self.cache.getViewSubNode(namespace, self.view_name)
+            if not node:
+                node = self.cache.addViewSubNode(namespace, tv_node, self.view_name)
+            return node
+        else:            """
+        return tv_node
+
+
+    def node_added(self, namespace, tv_node, xml_node):
         pass
 
 
-    def add_tv_namespace_node(self, parent, namespace, file, xml_node):
+    def add_tv_namespace_node(self, parent, namespace, xml_node):
         item = QStandardItem(namespace)
-        parent.appendRow([item, QStandardItem(''), QStandardItem(''), QStandardItem(file)])
+        parent.appendRow([item, QStandardItem('ns'), QStandardItem(''), QStandardItem('')])
         attach_xml_node(item, xml_node)
         attach_type(item, 'NS')
         return item
 
 
-    def show_detail(self, tree_view, xml_node):
+    """def show_detail(self, tree_view, xml_node):
         if xml_node.localName != self.xml_tag_name:
             return False
-        self.show_detail_impl(tree_view, xml_node)
-        return True
+        self.add_short_name(tree_view, xml_node)
+        self.show_detail_default(tree_view, xml_node)
+        return True"""
+
+    def show_detail(self, tree_view, xml_node):
+        func = self.detail_funcs.get(xml_node.localName)
+        if func:
+            self.add_short_name(tree_view, xml_node)
+            func(tree_view, xml_node)
+            return True
+        return False
 
 
-    def show_detail_impl(self, my_tree, xml_node):
-        self.clear_detail(my_tree)
+
+    """def show_detail_default(self, my_tree, xml_node):
+        #self.clear_detail(my_tree)
+        self.add_value(my_tree.model, xml_node, 'SHORT-NAME')
         self.show_detail_data(my_tree.model, xml_node)
-        my_tree.treeView.expandAll()
+        #my_tree.treeView.expandAll()"""
 
 
     def clear_detail(self, my_tree):
@@ -106,17 +138,33 @@ class ViewBase():
         return first_item
 
 
-    def add_to_treeview(self, parent, xml_node):
+    def add_to_treeview(self, parent, xml_node, filename=''):
         name = getShortName(xml_node)
         namespace = getNameSpace(xml_node)
-        item = self.cache.addViewSubNode(namespace, parent, name, xml_node.localName)
-        attach_xml_node(item, xml_node)
-        return item    
+
+        node = QStandardItem(xml_node.localName)
+        parent.appendRow([node, QStandardItem(name), QStandardItem(filename)])
+        self.cache.add(self.xml_tag_name, [namespace, name], node)
+        attach_xml_node(node, xml_node)
+        return node    
 
 
     def add_subnodes(self, tv_parent, xml_parent, tag_name):
         itemlist = xml_parent.getElementsByTagName(tag_name)
         for s in itemlist:
             namespace = getNameSpace(s)
-            node = self.add_tv_row_detail(tv_parent, [getShortName(s), tag_name], s)
+#            node = self.add_tv_row_detail(tv_parent, [getShortName(s), tag_name], s)
+            node = self.add_tv_row_detail(tv_parent, [tag_name, getShortName(s)], s)
             self.cache.add(tag_name, [namespace, getShortName(s)], node)   
+            self.subnode_added(node, s, tag_name)
+
+    def subnode_added(self, tv_node, xml_node, tag_name):
+        pass
+
+    def add_value(self, model, xml_node, name):
+        value = getValueByName(xml_node, name)
+        node = findFirstChildNodeByName(xml_node, name)
+        self.add_tv_row_detail(model, [name, value], node)            
+
+    def add_short_name(self, model, xml_node):
+        self.add_value(model, xml_node, 'SHORT-NAME')

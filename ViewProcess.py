@@ -23,16 +23,19 @@ from NamespaceCache import *
 class ViewProcess(ViewBase):
     def __init__(self, view_root_node, cache):
         ViewBase.__init__(self, 'PROCESS', None, view_root_node, cache)
-        pass
+        self.register_detail_func("APPLICATION-MODE-MACHINE", self.show_detail_app_mode_machine)
 
-    def show_detail_data(self, my_tree, xml_node):
+    def show_detail_default(self, my_tree, xml_node):
         s = xml_node
-        self.add_tv_row_detail(my_tree, ['EXECUTABLE-REF', getValueByNameT(s, 'EXECUTABLE-REF')], findFirstChildNodeByName(s, 'EXECUTABLE-REF'))
+        self.add_value(my_tree, xml_node, 'EXECUTABLE-REF')
+        """self.add_subnodes(my_tree, xml_node, 'MODE-DEPENDENT-STARTUP-CONFIG')
+        self.add_subnodes(my_tree, xml_node, 'FUNCTION-GROUP-IREF')
+        self.add_subnodes(my_tree, xml_node, 'MACHINE-MODE-IREF')"""
 
-
-
-    def postprocess_node(self, namespace, tv_node, xml_node):
-        self.add_subnodes(tv_node, xml_node, 'MODE-DEPENDENT-STARTUP-CONFIG')
-        self.add_subnodes(tv_node, xml_node, 'FUNCTION-GROUP-IREF')
-        self.add_subnodes(tv_node, xml_node, 'MACHINE-MODE-IREF')
+    def node_added(self, namespace, tv_node, xml_node):
+        #self.add_value(tv_node, xml_node, 'APPLICATION-MODE-MACHINE')
+        self.add_subnodes(tv_node, xml_node, 'APPLICATION-MODE-MACHINE')
         pass
+
+    def show_detail_app_mode_machine(self, my_tree, xml_node):
+        self.add_value(my_tree, xml_node, 'TYPE-TREF')

@@ -36,7 +36,7 @@ class ViewMethod(ViewBase):
         #todo self.tree_view.setFirstColumnSpanned(k-1, parent.index(), True)
 
 
-    def show_detail_data(self, model, node):
+    def show_detail_default(self, model, node):
 
         #Fire-And-Forget
         item = self.add_tv_row_detail(model, ['Fire-And-Forget', getFireAndForget(node)])

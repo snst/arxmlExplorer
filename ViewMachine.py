@@ -22,11 +22,26 @@ from NamespaceCache import *
 
 class ViewMachine(ViewBase):
     def __init__(self, view_root_node, cache):
-        ViewBase.__init__(self, 'MACHINE', None, view_root_node, cache)
+        ViewBase.__init__(self, 'MACHINE', 'machine', view_root_node, cache)
+        self.register_detail_func("ETHERNET-COMMUNICATION-CONNECTOR", self.show_detail_ethernet_communication_connector)
+        self.register_detail_func("MODE-DECLARATION-GROUP-PROTOTYPE", self.show_detail_mode_declaration_group_prototype)
+
+    def show_detail_ethernet_communication_connector(self, my_tree, xml_node):
+        self.add_value(my_tree, xml_node, 'UNICAST-NETWORK-ENDPOINT-REF')
+
+    def show_detail_mode_declaration_group_prototype(self, my_tree, xml_node):
+        self.add_value(my_tree, xml_node, 'TYPE-TREF')
+
+    def node_added(self, namespace, tv_node, xml_node):
+        self.add_subnodes(tv_node, xml_node, 'ETHERNET-COMMUNICATION-CONNECTOR')
+        self.add_subnodes(tv_node, xml_node, 'FUNCTION-GROUPS')
+        self.add_subnodes(tv_node, xml_node, 'MACHINE-MODE-MACHINES')
+        self.add_subnodes(tv_node, xml_node, 'SERVICE-DISCOVER-CONFIGS')
         pass
 
-    def show_detail_impl(self, my_tree, xml_node):
-        self.tree_view = my_tree.treeView
-        self.clear_detail(my_tree)
-        self.show_detail_data(my_tree.model, xml_node)
-        my_tree.treeView.expandAll()
+    def subnode_added(self, tv_node, xml_node, tag_name):
+        if tag_name == 'FUNCTION-GROUPS':
+            self.add_subnodes(tv_node, xml_node, 'MODE-DECLARATION-GROUP-PROTOTYPE')
+        elif tag_name == 'MACHINE-MODE-MACHINES':
+            self.add_subnodes(tv_node, xml_node, 'MODE-DECLARATION-GROUP-PROTOTYPE')
+        pass
