@@ -90,10 +90,10 @@ class App(QWidget):
         self.view_ethernet = self.add_view(ViewEthernet(self.model_tree.root_node_ethernet, None))
         self.view_machine = self.add_view(ViewMachine(self.model_tree.root_node_machine, None))
 
-        self.view_executable = self.add_view(ViewExecutable(self.model_tree.root_node_executable, None))
-        self.view_process = self.add_view(ViewProcess(self.model_tree.root_node_process, None))
-        self.view_startup_config = self.add_view(ViewStartupConfig(self.model_tree.root_node_startup_config, None))
-        self.view_application = self.add_view(ViewApplication(self.model_tree.root_node_application, None))
+        self.view_executable = self.add_view(ViewExecutable(self.model_tree.root_node_executable, self.cache))
+        self.view_process = self.add_view(ViewProcess(self.model_tree.root_node_process, self.cache))
+        self.view_startup_config = self.add_view(ViewStartupConfig(self.model_tree.root_node_startup_config, self.cache))
+        self.view_application = self.add_view(ViewApplication(self.model_tree.root_node_application, self.cache))
 
     def get_cache_for(self, name):
         for view in self.views:

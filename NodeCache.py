@@ -64,7 +64,8 @@ class NodeCache():
         if type(names) == list:
             name = names[0]
             for n in names[1:]:
-                name = name + "::" + n
+                if n:
+                    name = name + "::" + n
         else:
             name = names
         cache[name] = node

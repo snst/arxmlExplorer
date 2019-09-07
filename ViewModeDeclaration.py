@@ -28,7 +28,7 @@ class ViewModeDeclaration(ViewBase):
     def postprocess_node(self, namespace, tv_node, xml_node):
         self.add_subnodes(tv_node, xml_node, 'MODE-DECLARATION')
  
-
+ 
     def show_detail_data(self, tv_node, xml_node):
         self.add_tv_row_detail(tv_node, ['INITIAL-MODE-REF', getValueByNameT(xml_node,'INITIAL-MODE-REF')], findFirstChildNodeByName(xml_node, 'INITIAL-MODE-REF'))
 

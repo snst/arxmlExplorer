@@ -28,8 +28,6 @@ class ViewStartupConfig(ViewBase):
     def show_detail_data(self, model, xml_node):
         pass
 
-    def show_detail_impl(self, my_tree, xml_node):
-        self.tree_view = my_tree.treeView
-        self.clear_detail(my_tree)
-        self.show_detail_data(my_tree.model, xml_node)
-        my_tree.treeView.expandAll()
+    def postprocess_node(self, namespace, tv_node, xml_node):
+        self.add_subnodes(tv_node, xml_node, 'STARTUP-CONFIG')
+ 
