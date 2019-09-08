@@ -51,12 +51,13 @@ class ViewBase():
         itemlist = xml_node.getElementsByTagName(self.xml_tag_name)
         for s in itemlist:
             namespace = getNameSpace(s)
-            #tv_parent = self.get_tv_node_with_namespace(namespace)
-            #tv_node = self.add_to_treeview(tv_parent, s, file)
             name = getShortName(s)
-            node = QStandardItem(s.localName)
+            node_name = s.localName
+            if name:
+                node_name = node_name + '  :  ' + name
+            node = QStandardItem(node_name)
             self.view_root_node.appendRow([node, QStandardItem(namespace + '/' + name), QStandardItem(filename)])
-            #self.cache.add(self.xml_tag_name, [namespace, name], node)
+            self.cache.add(self.xml_tag_name, [namespace, name], node)
             attach_xml_node(node, s)
             self.node_added(node, s)
 
