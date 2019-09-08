@@ -12,13 +12,26 @@ QWidget, QPushButton, QDialog, QPlainTextEdit, QTabWidget)
 from xml.dom import minidom
 from arxmlHelper import *
 
+class CustomTreeView( QTreeView ):
+    def __init__(self):
+        QTreeView.__init__(self)
+        self.on_right_click = None
+
+    def mousePressEvent(self, event):
+        if event.type() == QEvent.MouseButtonPress:
+            if event.button() == Qt.RightButton:
+                #self.jump_to_reference()
+                if self.on_right_click:
+                    self.on_right_click()
+                return
+        QTreeView.mousePressEvent(self, event)
 
 class MethodArgumentsTreeView():
     def __init__(self, name, main):
         self.groupDataTypes = QGroupBox(name)
-        self.treeView = QTreeView()
-        self.treeView.mousePressEvent = self.mousePressEvent
+        self.treeView = CustomTreeView()
         #self.treeView.setRootIsDecorated(False)
+        self.treeView.on_right_click = self.jump_to_reference
         self.treeView.setAlternatingRowColors(True)
         dataLayout = QHBoxLayout()
         dataLayout.addWidget(self.treeView)
@@ -28,13 +41,6 @@ class MethodArgumentsTreeView():
         self.main = main
         pass
 
-    def mousePressEvent(self, event):
-        if event.type() == QEvent.MouseButtonPress:
-            if event.button() == Qt.RightButton:
-                self.jump_to_reference()
-                return
-            else:
-                super(QTreeView, self.treeView).mousePressEvent(event)
 
     def jump_to_reference(self):
         row = get_selected_tvnode_from_treeview(self.treeView)
