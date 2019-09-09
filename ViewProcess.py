@@ -29,11 +29,9 @@ class ViewProcess(ViewBase):
         self.register_detail_func("MODE-DEPENDENT-STARTUP-CONFIG", self.show_detail_mode_dependent_startup_config)
 
     def show_detail_default(self, tv_node, xml_node):
-        s = xml_node
         self.add_value(tv_node, xml_node, 'EXECUTABLE-REF')
-        """self.add_subnodes(my_tree, xml_node, 'MODE-DEPENDENT-STARTUP-CONFIG')
-        self.add_subnodes(my_tree, xml_node, 'FUNCTION-GROUP-IREF')
-        self.add_subnodes(my_tree, xml_node, 'MACHINE-MODE-IREF')"""
+        #self.add_subnodes(tv_node, xml_node, 'APPLICATION-MODE-MACHINE')
+        #self.add_subnodes(tv_node, xml_node, 'MODE-DEPENDENT-STARTUP-CONFIG')
 
     def show_detail_mode_ref(self, tv_node, xml_node):
         self.add_value(tv_node, xml_node, 'CONTEXT-MODE-DECLARATION-GROUP-PROTOTYPE-REF')
@@ -43,7 +41,6 @@ class ViewProcess(ViewBase):
         self.add_value(tv_node, xml_node, 'STARTUP-CONFIG-REF')
 
     def node_added(self, tv_node, xml_node):
-        #self.add_value(tv_node, xml_node, 'APPLICATION-MODE-MACHINE')
         self.add_subnodes(tv_node, xml_node, 'APPLICATION-MODE-MACHINE')
         self.add_subnodes(tv_node, xml_node, 'MODE-DEPENDENT-STARTUP-CONFIG')
         pass

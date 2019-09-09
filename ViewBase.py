@@ -53,10 +53,10 @@ class ViewBase():
             namespace = getNameSpace(s)
             name = getShortName(s)
             node_name = s.localName
-            if name:
-                node_name = node_name + '  :  ' + name
+            #if name:
+            #    node_name = node_name + '  :  ' + name
             node = QStandardItem(node_name)
-            self.view_root_node.appendRow([node, QStandardItem(namespace + '/' + name), QStandardItem(filename)])
+            self.view_root_node.appendRow([node, QStandardItem(name), QStandardItem(namespace), QStandardItem(filename)])
             self.cache.add(self.xml_tag_name, [namespace, name], node)
             attach_xml_node(node, s)
             self.node_added(node, s)
@@ -159,10 +159,14 @@ class ViewBase():
         for s in itemlist:
             namespace = getNameSpace(s)
             name = getShortName(s)
-            if namespace and name:
-                name = namespace + '/' + name
+            shown_name_space = namespace
+            """if name:
+                shown_name_space = namespace + '/' + name
+            shown_tag_name = tag_name
+            if name:
+                shown_tag_name = shown_tag_name + '  :  '+ name"""
 #            node = self.add_tv_row_detail(tv_parent, [getShortName(s), tag_name], s)
-            node = self.add_tv_row_detail(tv_parent, [tag_name, name], s)
+            node = self.add_tv_row_detail(tv_parent, [tag_name, name, namespace], s)
             self.cache.add(tag_name, [namespace, getShortName(s)], node)   
             self.subnode_added(node, s, tag_name)
 

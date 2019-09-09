@@ -27,10 +27,14 @@ class ViewStartupConfig(ViewBase):
 
     def node_added(self, tv_node, xml_node):
         self.add_subnodes(tv_node, xml_node, 'STARTUP-CONFIG')
- 
+
+
     def show_detail_startup_config(self, tree_view, xml_node):
         self.add_value(tree_view, xml_node, 'SCHEDULING-POLICY')
         self.add_value(tree_view, xml_node, 'SCHEDULING-PRIORITY')
 
     def show_detail_default(self, tree_view, xml_node):
+        #detail
+        #self.add_value(tree_view, xml_node, 'SCHEDULING-POLICY')
+        #self.add_value(tree_view, xml_node, 'SCHEDULING-PRIORITY')
         pass
