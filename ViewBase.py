@@ -15,13 +15,13 @@ from NamespaceCache import *
 from arxmlHelper import *
 
 class ViewBase():
-    def __init__(self, xml_tag_name, view_name, view_root_node, cache = None):
+    def __init__(self, xml_tag_name, node_name, view_root_node, cache = None):
         if cache:
             self.cache = cache
         else:
             self.cache = NamespaceCache()
         self.xml_tag_name = xml_tag_name
-        self.view_name = view_name
+        self.node_name = node_name
         self.view_root_node = view_root_node
         self.detail_funcs = { self.xml_tag_name: self.show_detail_default }
 
@@ -31,21 +31,6 @@ class ViewBase():
     def show_detail_default(self, tree_view, xml_node):
         pass
 
-    def get_tv_namespace_node(self, xml_node, file):
-        namespace = getNameSpace(xml_node)
-        ns_node = self.cache.getViewNode(namespace)
-        if not ns_node:
-            ns_node = self.add_tv_namespace_node(self.view_root_node, namespace, None)
-            self.cache.addViewNode(namespace, ns_node)
-
-        if self.view_name:
-            node = self.cache.getViewSubNode(namespace, self.view_name)
-            if not node:
-                node = self.cache.addViewSubNode(namespace, ns_node, self.view_name)
-            return node
-        else:
-            return ns_node
-
 
     def parse(self, xml_node, filename):
         itemlist = xml_node.getElementsByTagName(self.xml_tag_name)
@@ -53,12 +38,11 @@ class ViewBase():
             namespace = getNameSpace(s)
             name = getShortName(s)
             node_name = s.localName
-            #if name:
-            #    node_name = node_name + '  :  ' + name
-            node = QStandardItem(node_name)
-            self.view_root_node.appendRow([node, QStandardItem(name), QStandardItem(namespace), QStandardItem(filename)])
+            node = self.add_row(self.view_root_node, [[self.node_name, s.localName], name, namespace, filename], s)
+            #node = QStandardItem(node_name)
+            #self.view_root_node.appendRow([node, QStandardItem(name), QStandardItem(namespace), QStandardItem(filename)])
             self.cache.add(self.xml_tag_name, [namespace, name], node)
-            attach_xml_node(node, s)
+            #attach_xml_node(node, s)
             self.node_added(node, s)
 
 
@@ -96,11 +80,11 @@ class ViewBase():
         self.show_detail_default(tree_view, xml_node)
         return True"""
 
-    def show_detail(self, tree_view, xml_node):
+    def show_detail(self, tv_node, xml_node):
         func = self.detail_funcs.get(xml_node.localName)
         if func:
-            self.add_short_name(tree_view, xml_node)
-            func(tree_view, xml_node)
+            self.add_short_name(tv_node, xml_node)
+            func(tv_node, xml_node)
             return True
         return False
 
@@ -124,6 +108,8 @@ class ViewBase():
     def show_detail_data(self, tree, node):
         pass
         
+    def add_row(self, parent, arg_list, xml_node = None):
+        return self.add_tv_row_detail(parent, arg_list, xml_node)
 
     def add_tv_row_detail(self, parent, arg_list, xml_node = None):
         row = []
@@ -154,29 +140,27 @@ class ViewBase():
         return node    
 
 
-    def add_subnodes(self, tv_parent, xml_parent, tag_name):
+    def add_subnodes(self, tv_parent, xml_parent, tag_name, shown_name = None):
         itemlist = xml_parent.getElementsByTagName(tag_name)
         for s in itemlist:
             namespace = getNameSpace(s)
             name = getShortName(s)
             shown_name_space = namespace
-            """if name:
-                shown_name_space = namespace + '/' + name
-            shown_tag_name = tag_name
-            if name:
-                shown_tag_name = shown_tag_name + '  :  '+ name"""
-#            node = self.add_tv_row_detail(tv_parent, [getShortName(s), tag_name], s)
-            node = self.add_tv_row_detail(tv_parent, [tag_name, name, namespace], s)
+            if not shown_name:
+                shown_name = tag_name
+            node = self.add_tv_row_detail(tv_parent, [[shown_name, tag_name], name, namespace], s)
             self.cache.add(tag_name, [namespace, getShortName(s)], node)   
             self.subnode_added(node, s, tag_name)
 
     def subnode_added(self, tv_node, xml_node, tag_name):
         pass
 
-    def add_value(self, model, xml_node, name):
-        value = getValueByName(xml_node, name)
-        node = findFirstChildNodeByName(xml_node, name)
-        self.add_tv_row_detail(model, [name, value], node)            
+    def add_value(self, model, xml_node, xml_tag_name, shown_name = None):
+        value = getValueByName(xml_node, xml_tag_name)
+        node = findFirstChildNodeByName(xml_node, xml_tag_name)
+        if not shown_name:
+            shown_name = xml_tag_name
+        self.add_tv_row_detail(model, [[shown_name, xml_tag_name], value], node)            
 
     def add_short_name(self, model, xml_node):
-        self.add_value(model, xml_node, 'SHORT-NAME')
+        self.add_value(model, xml_node, 'SHORT-NAME', 'name')

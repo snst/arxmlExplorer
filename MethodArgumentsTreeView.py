@@ -11,27 +11,13 @@ QGroupBox, QHBoxLayout, QLabel, QLineEdit, QTreeView, QVBoxLayout,
 QWidget, QPushButton, QDialog, QPlainTextEdit, QTabWidget)
 from xml.dom import minidom
 from arxmlHelper import *
-
-class CustomTreeView( QTreeView ):
-    def __init__(self):
-        QTreeView.__init__(self)
-        self.on_right_click = None
-
-    def mousePressEvent(self, event):
-        if event.type() == QEvent.MouseButtonPress:
-            if event.button() == Qt.RightButton:
-                #self.jump_to_reference()
-                if self.on_right_click:
-                    self.on_right_click()
-                return
-        QTreeView.mousePressEvent(self, event)
+from CustomTreeView import *
 
 class MethodArgumentsTreeView():
     def __init__(self, name, main):
         self.groupDataTypes = QGroupBox(name)
         self.treeView = CustomTreeView()
         #self.treeView.setRootIsDecorated(False)
-        self.treeView.on_right_click = self.jump_to_reference
         self.treeView.setAlternatingRowColors(True)
         dataLayout = QHBoxLayout()
         dataLayout.addWidget(self.treeView)
@@ -39,11 +25,12 @@ class MethodArgumentsTreeView():
         self.model = None
         self.clear()
         self.main = main
+        self.treeView.on_right_click = self.jump_to_reference
+        self.treeView.on_left_click = self.main.show_help_row
         pass
 
 
-    def jump_to_reference(self):
-        row = get_selected_tvnode_from_treeview(self.treeView)
+    def jump_to_reference(self, row):
         if row:
             text = get_text_from_tvnode(row[1])
             ns = text[1:].replace('/', '/')

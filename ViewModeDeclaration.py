@@ -22,17 +22,17 @@ from NamespaceCache import *
 
 class ViewModeDeclaration(ViewBase):
     def __init__(self, view_root_node, cache):
-        ViewBase.__init__(self, 'MODE-DECLARATION-GROUP', 'machine', view_root_node, cache)
+        ViewBase.__init__(self, 'MODE-DECLARATION-GROUP', 'ModeDeclarationGroup', view_root_node, cache)
         self.register_detail_func("MODE-DECLARATION", self.show_detail_mode_declaration)
 
 
     def node_added(self, tv_node, xml_node):
-        self.add_subnodes(tv_node, xml_node, 'MODE-DECLARATION')
+        self.add_subnodes(tv_node, xml_node, 'MODE-DECLARATION', 'ModeDeclaration')
  
  
     def show_detail_default(self, tv_node, xml_node):
-        self.add_value(tv_node, xml_node, 'INITIAL-MODE-REF')
+        self.add_value(tv_node, xml_node, 'INITIAL-MODE-REF', 'initialMode')
 
 
     def show_detail_mode_declaration(self, tv_node, xml_node):
-        self.add_value(tv_node, xml_node, 'VALUE')
+        self.add_value(tv_node, xml_node, 'VALUE', 'value')

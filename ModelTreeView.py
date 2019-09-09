@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QGridLayout,
 QGroupBox, QHBoxLayout, QLabel, QLineEdit, QTreeView, QVBoxLayout,
 QWidget, QPushButton, QDialog, QPlainTextEdit, QTabWidget)
 from xml.dom import minidom
+from CustomTreeView import *
 
 class MyFilter(QSortFilterProxyModel):
     def __init__(self):
@@ -31,11 +32,12 @@ class MyFilter(QSortFilterProxyModel):
         return c
 
 class ModelTreeView():
-    def __init__(self):
+    def __init__(self, main):
+        self.main = main
         self.groupDataTypes = QGroupBox('Model')
         self.textbox_filter = QLineEdit()
         self.textbox_filter.returnPressed.connect(self.on_filter_updated)
-        self.treeView = QTreeView()
+        self.treeView = CustomTreeView()
         #self.treeView.setRootIsDecorated(False)
         self.treeView.setAlternatingRowColors(True)
         dataLayout = QVBoxLayout()
@@ -53,6 +55,7 @@ class ModelTreeView():
         self.treeView.setColumnWidth(1, 200)
         self.treeView.setColumnWidth(2, 250)
 
+        #self.treeView.on_left_click = self.main.on_tree_selection_changed
 
 
         self.root_node_model = self.add_main_node('Model')
@@ -60,12 +63,19 @@ class ModelTreeView():
         self.root_node_machine_manifest = self.add_main_node('Machine Manifest')
         self.root_node_application_design = self.add_main_node('Application Design')
         self.root_node_application_manifest = self.add_main_node('Application Manifest')
-        
+        self.root_node_execution_manifest = self.add_main_node('Execution Manifest')
+        self.root_node_function_groups = self.add_node(self.root_node_machine_manifest, 'functionGroup')
+        self.root_node_communication_connector = self.add_node(self.root_node_machine_manifest, 'CommunicationConnector')
+        self.root_node_service_discover_config = self.add_node(self.root_node_machine_manifest, 'serviceDiscoverConfig')
         pass
 
-    def add_main_node(self, name):
+    def add_node(self, parent, name):
         node = QStandardItem(name)
-        self.model.appendRow(node)
+        parent.appendRow(node)
+        return node
+
+    def add_main_node(self, name):
+        node = self.add_node(self.model, name)
         return node
 
 

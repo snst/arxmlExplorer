@@ -22,7 +22,7 @@ from NamespaceCache import *
 
 class ViewEthernet(ViewBase):
     def __init__(self, view_root_node, cache):
-        ViewBase.__init__(self, 'ETHERNET-CLUSTER', None, view_root_node, cache)
+        ViewBase.__init__(self, 'ETHERNET-CLUSTER', 'EthernetCluster', view_root_node, cache)
         self.register_detail_func("NETWORK-ENDPOINT", self.show_detail_network_endpoint)
         self.register_detail_func("VLAN", self.show_detail_vlan)
         pass
@@ -31,21 +31,22 @@ class ViewEthernet(ViewBase):
         pass
 
     def node_added(self, tv_node, xml_node):
-        self.add_subnodes(tv_node, xml_node, 'ETHERNET-PHYSICAL-CHANNEL')
+        self.add_subnodes(tv_node, xml_node, 'ETHERNET-PHYSICAL-CHANNEL', 'EthernetPhysicalChannel')
         pass
 
     def subnode_added(self, tv_node, xml_node, tag_name):
         if tag_name == 'ETHERNET-PHYSICAL-CHANNEL':
-            self.add_subnodes(tv_node, xml_node, 'NETWORK-ENDPOINT')
-            self.add_subnodes(tv_node, xml_node, 'VLAN')
+            self.add_subnodes(tv_node, xml_node, 'NETWORK-ENDPOINT', 'NetworkEndpoint')
+            self.add_subnodes(tv_node, xml_node, 'VLAN', 'VlanConfig')
         pass
 
     def show_detail_network_endpoint(self, tv_node, xml_node):
-        self.add_value(tv_node, xml_node, 'FULLY-QUALIFIED-DOMAIN-NAME')
+        self.add_value(tv_node, xml_node, 'FULLY-QUALIFIED-DOMAIN-NAME', 'fullyQualifiedDomainName')
         itemlist = xml_node.getElementsByTagName('IPV-4-CONFIGURATION')
         for s in itemlist:
-            self.add_value(tv_node, s, 'IPV-4-ADDRESS')
-            self.add_value(tv_node, s, 'IPV-4-ADDRESS-SOURCE')
+            n = self.add_row(tv_node, [['Ipv4Configuration', 'IPV-4-CONFIGURATION']], s)
+            self.add_value(n, s, 'IPV-4-ADDRESS', 'ipv4Address')
+            self.add_value(n, s, 'IPV-4-ADDRESS-SOURCE', 'ipv4AddressSource')
 
     def show_detail_vlan(self, tv_node, xml_node):
         self.add_value(tv_node, xml_node, 'VLAN-IDENTIFIER')
