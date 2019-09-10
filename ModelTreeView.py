@@ -3,15 +3,58 @@
 # Copyright 2019 by Stefan Schmidt
 import os
 import sys
-from PyQt5.QtGui import QIcon, QStandardItem
+from PyQt5.QtGui import QIcon, QStandardItem, QFontMetrics
 from PyQt5.QtCore import (QDate, QDateTime, QRegExp, QSortFilterProxyModel, Qt,
 QTime, pyqtSlot, QObject, pyqtSignal)
-from PyQt5.QtGui import QStandardItemModel
-from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QGridLayout,
-QGroupBox, QHBoxLayout, QLabel, QLineEdit, QTreeView, QVBoxLayout,
+from PyQt5.QtGui import QStandardItemModel, QBrush, QColor
+from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QGridLayout, QStyledItemDelegate,
+QGroupBox, QHBoxLayout, QLabel, QLineEdit, QTreeView, QVBoxLayout, QTreeWidgetItem, QSpinBox, QStyle, 
 QWidget, QPushButton, QDialog, QPlainTextEdit, QTabWidget)
 from xml.dom import minidom
 from CustomTreeView import *
+
+class ViewDelegate(QStyledItemDelegate):
+    def __init__(self):
+        QStyledItemDelegate.__init__(self) 
+        self.padding = 2
+        self.AlignmentFlag =  Qt.AlignLeft
+
+    def paint3(self, painter, option, index):
+        super(ViewDelegate, self).paint(painter, option, index)
+
+    def paint(self, painter, option, index):
+        x = option.rect.x()
+        y = option.rect.y()
+        width = option.rect.width()
+        height = option.rect.height()
+        #iconList = index.data(256)                      # get the icons associated with the item
+        text = index.data()                             # get the items text
+        """
+        for a, i in enumerate(iconList):
+            m = max([i.width(), i.height()]) 
+            f = (height- 2*self.padding)/m                  # scalingfactor
+            i = i.scaled(int(i.width()*f),int(i.height()*f))                    # scale all pixmaps to the same size depending on lineheight
+            painter.drawPixmap(QPoint(x,y+self.padding),i)
+            x += height
+        """
+
+
+        if option.state & QStyle.State_Selected:
+            option.backgroundBrush = QBrush(QColor(100, 200, 100, 200))
+            #painter.fillRect(option.rect, painter.brush())
+            painter.fillRect(option.rect, option.backgroundBrush)
+        font = painter.font()
+        fm = QFontMetrics(font);
+        w = fm.width(text)
+        painter.drawText(QRect(x + self.padding,y + self.padding, width - x - 2*self.padding, height - 2*self.padding),self.AlignmentFlag, text)
+
+        font.setItalic(True);   
+        painter.setFont(font);  
+
+        painter.drawText(QRect(w+x + self.padding,y + self.padding, width - x - 2*self.padding, height - 2*self.padding),self.AlignmentFlag, text)
+        font.setItalic(False);   
+        painter.setFont(font);  
+
 
 class MyFilter(QSortFilterProxyModel):
     def __init__(self):
@@ -50,6 +93,9 @@ class ModelTreeView():
         self.proxyModel.setDynamicSortFilter(True)
         self.proxyModel.setSourceModel(self.model)
 
+        self.delegate = ViewDelegate()
+        self.treeView.setItemDelegateForColumn(0, self.delegate)
+
         self.treeView.setModel(self.proxyModel)
         self.treeView.setColumnWidth(0, 350)
         self.treeView.setColumnWidth(1, 200)
@@ -67,6 +113,9 @@ class ModelTreeView():
         self.root_node_function_groups = self.add_node(self.root_node_machine_manifest, 'functionGroup')
         self.root_node_communication_connector = self.add_node(self.root_node_machine_manifest, 'CommunicationConnector')
         self.root_node_service_discover_config = self.add_node(self.root_node_machine_manifest, 'serviceDiscoverConfig')
+
+        #self.root_node_model.appendRow(a)
+
         pass
 
     def add_node(self, parent, name):
