@@ -6,6 +6,14 @@ import sys
 from xml.dom import *
 from PyQt5.QtCore import (Qt)
 
+RoleXmlNode = Qt.UserRole + 1
+RoleNamespace = Qt.UserRole + 3
+RoleType = Qt.UserRole + 4
+RoleXmlTag = Qt.UserRole + 5
+RoleHelp = Qt.UserRole + 6
+
+RoleTypeName = 1
+
 def getXmlContent(node):
     val = None
     if node != None:

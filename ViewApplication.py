@@ -23,7 +23,7 @@ from NamespaceCache import *
 class ViewApplication(ViewBase):
     def __init__(self, view_root_node, cache):
         ViewBase.__init__(self, 'ADAPTIVE-AUTOSAR-APPLICATION', None, view_root_node, cache)
-        pass
+        self.view_root_node = self.add_node2(view_root_node, 'AdaptiveApplication')
 
 
     def show_detail_default(self, tv_node, xml_node):

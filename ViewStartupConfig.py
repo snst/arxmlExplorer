@@ -25,21 +25,23 @@ class ViewStartupConfig(ViewBase):
         ViewBase.__init__(self, 'STARTUP-CONFIG-SET', 'StartupConfigSet', view_root_node, cache)
         self.register_detail_func("STARTUP-CONFIG", self.show_detail_startup_config)
 
-    def node_added(self, tv_node, xml_node):
-        self.add_subnodes(tv_node, xml_node, 'STARTUP-CONFIG', 'StartupConfig')
+    def node_added(self, node, xml):
+#        self.add_subnodes(node, xml, 'STARTUP-CONFIG', 'StartupConfig')
+        self.add_subnodes2(node, xml, None, 'STARTUP-CONFIG')
 
 
-    def show_detail_startup_config(self, tv_node, xml_node):
-        self.add_value(tv_node, xml_node, 'SCHEDULING-POLICY', 'schedulingPolicy')
-        self.add_value(tv_node, xml_node, 'SCHEDULING-PRIORITY', 'schedulingPriority')
+    def show_detail_startup_config(self, node, xml):
+        self.add_value(node, xml, 'SCHEDULING-POLICY', 'schedulingPolicy')
+        self.add_value(node, xml, 'SCHEDULING-PRIORITY', 'schedulingPriority')
 
-        itemlist = xml_node.getElementsByTagName('STARTUP-OPTION')
+        nn = self.add_row(node, [['StartupOptions', 'bla']])
+        itemlist = xml.getElementsByTagName('STARTUP-OPTION')
         for s in itemlist:
-            n = self.add_row(tv_node, [['StartupOption', 'STARTUP-OPTION']], s)
+            n = self.add_row(nn, [['StartupOption', 'STARTUP-OPTION']], s)
             self.add_value(n, s, 'OPTION-ARGUMENT', 'optionArgument')
             self.add_value(n, s, 'OPTION-KIND', 'optionKind')
             self.add_value(n, s, 'OPTION-NAME', 'optionName')
 
 
-    def show_detail_default(self, tree_view, xml_node):
+    def show_detail_default(self, tree_view, xml):
         pass

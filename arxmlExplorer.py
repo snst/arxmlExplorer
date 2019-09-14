@@ -63,20 +63,29 @@ class App(QWidget):
         self.detail = MethodArgumentsTreeView("Details", self)
         self.errorlist = MethodErrorListWidget()
         self.combo = MethodArgumentEditor()
-        self.tabs = QTabWidget()
+        #self.tabs = QTabWidget()
         self.plaintext_xml = QPlainTextEdit()
-        self.plaintext_xml.resize(400,150)
+        #self.plaintext_xml.resize(400,150)
         self.plaintext_help = QPlainTextEdit()
-        self.plaintext_help.resize(400,150)
+        #self.plaintext_help.resize(400,150)
         self.splitter1 = QSplitter(Qt.Vertical)
 
         self.splitter1.addWidget(self.model_tree.groupDataTypes)
         self.splitter1.addWidget(self.detail.groupDataTypes)
-        self.splitter1.addWidget(self.tabs)
+
+        self.splitter2 = QSplitter(Qt.Horizontal)
+        self.splitter2.addWidget(self.plaintext_xml)
+        self.splitter2.addWidget(self.plaintext_help)
+        self.splitter1.addWidget(self.splitter2)
+        self.splitter2.setStretchFactor(0,1)
+        self.splitter2.setStretchFactor(1,0)
+        #self.splitter2.setSizes([0, 1])
+
+        #self.splitter1.addWidget(self.tabs)
 
         mainLayout = QVBoxLayout()
-        self.tabs.addTab(self.plaintext_xml,"XML")
-        self.tabs.addTab(self.plaintext_help,"Help")
+        #self.tabs.addTab(self.plaintext_xml,"XML")
+        #self.tabs.addTab(self.plaintext_help,"Help")
         #self.tabs.addTab(self.errorlist.groupDataTypes, "Possible Errors")
 
         self.model_tree.treeView.selectionModel().selectionChanged.connect(self.on_model_tree_selection_changed)
@@ -95,15 +104,16 @@ class App(QWidget):
 
         """
 
-        """self.view_executable = self.add_view(ViewExecutable(self.model_tree.root_node_application_design, self.cache))
-        self.view_application = self.add_view(ViewApplication(self.model_tree.root_node_application_design, self.cache))
-        self.view_adaptive_sw_component = self.add_view(ViewAdaptiveSwComponent(self.model_tree.root_node_application_design, self.cache))
-        """
-
-        self.view_mode_declaration = self.add_view(ViewModeDeclaration(self.model_tree.root_node_function_groups, self.cache))
+        self.view_executable = self.add_view(ViewExecutable(self.model_tree.root_node_application_design, self.cache))
+        
+        
         self.view_ethernet = self.add_view(ViewEthernet(self.model_tree.root_node_communication_connector, self.cache))
-        self.view_startup_config = self.add_view(ViewStartupConfig(self.model_tree.root_node_execution_manifest, self.cache))
-        #self.view_machine = self.add_view(ViewMachine(self.model_tree.root_node_machine_manifest, self.cache))
+        self.view_machine = self.add_view(ViewMachine(self.model_tree.root_node_machine_manifest, self.cache))
+
+        self.view_adaptive_sw_component = self.add_view(ViewAdaptiveSwComponent(self.model_tree.root_node_application_design, self.cache))
+        self.view_application = self.add_view(ViewApplication(self.model_tree.root_node_application_design, self.cache))
+        self.view_mode_declaration = self.add_view(ViewModeDeclaration(self.model_tree.root_node_machine_manifest, self.cache))
+        self.view_startup_config = self.add_view(ViewStartupConfig(self.model_tree.root_node_startup_config_set, self.cache))
         self.view_process = self.add_view(ViewProcess(self.model_tree.root_node_execution_manifest, self.cache))
 
 
@@ -143,7 +153,8 @@ class App(QWidget):
         self.plaintext_xml.setPlainText(str)
 
     def show_help_row(self, index):
-        self.show_help(index.data(Qt.DisplayRole))
+        self.show_help(index.data(RoleHelp))
+        self.show_xml(index.data(RoleXmlNode))
         pass
 
     def show_help(self, item):

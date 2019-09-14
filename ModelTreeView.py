@@ -12,6 +12,7 @@ QGroupBox, QHBoxLayout, QLabel, QLineEdit, QTreeView, QVBoxLayout, QTreeWidgetIt
 QWidget, QPushButton, QDialog, QPlainTextEdit, QTabWidget)
 from xml.dom import minidom
 from CustomTreeView import *
+from arxmlHelper import *
 
 class ViewDelegate(QStyledItemDelegate):
     def __init__(self):
@@ -46,14 +47,26 @@ class ViewDelegate(QStyledItemDelegate):
         font = painter.font()
         fm = QFontMetrics(font);
         w = fm.width(text)
+        
+        roleType = index.data(RoleType)
+        if roleType == RoleTypeName:
+            font.setItalic(True);   
+            painter.setFont(font);  
         painter.drawText(QRect(x + self.padding,y + self.padding, width - x - 2*self.padding, height - 2*self.padding),self.AlignmentFlag, text)
-
-        font.setItalic(True);   
-        painter.setFont(font);  
-
-        painter.drawText(QRect(w+x + self.padding,y + self.padding, width - x - 2*self.padding, height - 2*self.padding),self.AlignmentFlag, text)
         font.setItalic(False);   
         painter.setFont(font);  
+
+        """
+        text = index.data(RoleType)
+        if text:
+            text = ' : ' + text
+            font.setItalic(True);   
+            painter.setFont(font);  
+
+            painter.drawText(QRect(w+x + self.padding,y + self.padding, width - x - 2*self.padding, height - 2*self.padding),self.AlignmentFlag, text)
+            font.setItalic(False);   
+            painter.setFont(font);  
+        """
 
 
 class MyFilter(QSortFilterProxyModel):
@@ -110,9 +123,9 @@ class ModelTreeView():
         self.root_node_application_design = self.add_main_node('Application Design')
         self.root_node_application_manifest = self.add_main_node('Application Manifest')
         self.root_node_execution_manifest = self.add_main_node('Execution Manifest')
-        self.root_node_function_groups = self.add_node(self.root_node_machine_manifest, 'functionGroup')
         self.root_node_communication_connector = self.add_node(self.root_node_machine_manifest, 'CommunicationConnector')
         self.root_node_service_discover_config = self.add_node(self.root_node_machine_manifest, 'serviceDiscoverConfig')
+        self.root_node_startup_config_set = self.add_node(self.root_node_execution_manifest, 'StartupConfigSet')
 
         #self.root_node_model.appendRow(a)
 

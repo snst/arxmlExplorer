@@ -8,6 +8,16 @@ import sys
 class arxmlHelp():
     def __init__(self):
         self.dict = {}
+        self.add('process_applicationModeMachine', 'Set of ApplicationStates (Modes) that are defined for the process.')
+        self.add('process_executableRef', 'Reference to executable that is executed in the process.')
+        self.add('process_modeDependentStartupConfig','Applicable startup configurations.')
+        self.add('process_startupConfig','Reference to a reusable startup configuration with startup parameters.')
+        self.add('process_functionGroupMode','This represent the applicable functionGroupMode.')
+        self.add('process_machineMode','This represent the applicable machineMode.')
+        self.add('','')
+        self.add('','')
+
+
         self.add('functionGroup', 'Function groups with function group states individually control groups of functionally coherent Application processes. The Process state may depend on a mode that is defined in the function group in case that the StateDependentStartupConfig refers to the function group state with the functionGroupState reference.')
         self.add('initialMode', 'The initial mode of the ModeDeclarationGroup. This mode is active before any mode switches occurred.')
         self.add('ModeDeclarationGroup', 'The "collection of ModeDeclarations" ( = ModeDeclarationGroup) supported by a component')

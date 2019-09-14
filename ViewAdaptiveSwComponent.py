@@ -25,22 +25,25 @@ class ViewAdaptiveSwComponent(ViewBase):
         ViewBase.__init__(self, 'ADAPTIVE-APPLICATION-SW-COMPONENT-TYPE', None, view_root_node, cache)
         self.register_detail_func("P-PORT-PROTOTYPE", self.show_detail_p_port)
         self.register_detail_func("R-PORT-PROTOTYPE", self.show_detail_r_port)
+        self.view_root_node = self.add_node2(view_root_node, 'AdaptiveApplicationSwComponent')
 
 
-    def node_added(self, tv_node, xml_node):
-        self.add_subnodes(tv_node, xml_node, 'P-PORT-PROTOTYPE')
-        self.add_subnodes(tv_node, xml_node, 'R-PORT-PROTOTYPE')
+    def node_added(self, node, xml):
+        n = self.add_node2(node, 'ProvidedPorts')
+        self.add_subnodes2(n, xml, None, 'P-PORT-PROTOTYPE')
+        n = self.add_node2(node, 'RequiredPorts')
+        self.add_subnodes2(n, xml, None, 'R-PORT-PROTOTYPE')
         pass
 
 
-    def show_detail_default(self, tv_node, xml_node):
-        #self.add_value(tree_view, xml_node, 'TRANSFORMATION-PROPS-MAPPING-SET-REF')
+    def show_detail_default(self, node, xml):
+        #self.add_value(tree_view, xml, 'TRANSFORMATION-PROPS-MAPPING-SET-REF')
         pass
 
 
-    def show_detail_p_port(self, tv_node, xml_node):
-        self.add_value(tv_node, xml_node, 'PROVIDED-INTERFACE-TREF')
+    def show_detail_p_port(self, node, xml):
+        self.add_value(node, xml, 'PROVIDED-INTERFACE-TREF')
 
 
-    def show_detail_r_port(self, tv_node, xml_node):
-        self.add_value(tv_node, xml_node, 'REQUIRED-INTERFACE-TREF')
+    def show_detail_r_port(self, node, xml):
+        self.add_value(node, xml, 'REQUIRED-INTERFACE-TREF')

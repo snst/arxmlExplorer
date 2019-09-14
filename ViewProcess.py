@@ -23,36 +23,36 @@ from NamespaceCache import *
 class ViewProcess(ViewBase):
     def __init__(self, view_root_node, cache):
         ViewBase.__init__(self, 'PROCESS', 'Process', view_root_node, cache)
-        self.register_detail_func("APPLICATION-MODE-MACHINE", self.show_detail_app_mode_machine)
-        self.register_detail_func("FUNCTION-GROUP-IREF", self.show_detail_mode_ref)
-        self.register_detail_func("MACHINE-MODE-IREF", self.show_detail_mode_ref)
-        self.register_detail_func("MODE-DEPENDENT-STARTUP-CONFIG", self.show_detail_mode_dependent_startup_config)
+        self.view_root_node = self.add_node2(self.view_root_node, 'Process')
+
+    def FunctionGroupMode_added(self, node, xml):
+        self.add_value(node, xml, 'CONTEXT-MODE-DECLARATION-GROUP-PROTOTYPE-REF', 'ModeRef')
+        self.add_value(node, xml, 'TARGET-MODE-DECLARATION-REF', 'TargetRef')
+        pass
+
+    def MachineMode_added(self, node, xml):
+        self.add_value(node, xml, 'CONTEXT-MODE-DECLARATION-GROUP-PROTOTYPE-REF', 'ModeRef')
+        self.add_value(node, xml, 'TARGET-MODE-DECLARATION-REF', 'TargetRef')
+        pass
+
+    def ModeDependentStartupConfig_added(self, node, xml):
+        self.add_value(node, xml, 'STARTUP-CONFIG-REF', 'StartupConfigRef', h='process_startupConfig')
+        self.add_subnodes2(node, xml, 'FunctionGroupMode', 'FUNCTION-GROUP-IREF', self.FunctionGroupMode_added, h='process_functionGroupMode')
+        self.add_subnodes2(node, xml, 'MachineMode', 'MACHINE-MODE-IREF', self.MachineMode_added, h='process_machineMode')
+        pass
 
     def show_detail_default(self, tv_node, xml_node):
-        self.add_value(tv_node, xml_node, 'EXECUTABLE-REF', 'ExecutableRef')
-        self.add_subnodes(tv_node, xml_node, 'MODE-DEPENDENT-STARTUP-CONFIG', 'StateDependentStartupConfig')
+        xml_child = getChild(xml_node, 'APPLICATION-MODE-MACHINE')
+        subnode = self.add_node2(tv_node, 'ApplicationModeMachine', xml_node=xml_child, h='process_applicationModeMachine')
+        if xml_child:
+            self.add_short_name(subnode, xml_child)
+            self.add_value(subnode, xml_child, 'TYPE-TREF', 'ModeRef')
+            #self.add_value(subnode, xml_child, 'TYPE-TREF', getShortName(xml_child), italic=True)
 
-    def show_detail_mode_ref(self, tv_node, xml_node):
-        self.add_value(tv_node, xml_node, 'CONTEXT-MODE-DECLARATION-GROUP-PROTOTYPE-REF')
-        self.add_value(tv_node, xml_node, 'TARGET-MODE-DECLARATION-REF')
+        self.add_value(tv_node, xml_node, 'EXECUTABLE-REF', 'ExecutableRef', h='process_executableRef')
 
-    def show_detail_mode_dependent_startup_config(self, tv_node, xml_node):
-        self.add_value(tv_node, xml_node, 'STARTUP-CONFIG-REF', 'StartupConfigRef')
+        xml_child = getChild(xml_node, 'MODE-DEPENDENT-STARTUP-CONFIGS')
+        subnode = self.add_node2(tv_node, 'ModeDependentStartupConfigs', xml_node=xml_child, h=None)
+        self.add_subnodes2(subnode, xml_child, 'ModeDependentStartupConfig', 'MODE-DEPENDENT-STARTUP-CONFIG', self.ModeDependentStartupConfig_added, h='process_modeDependentStartupConfig')
 
-    def node_added(self, tv_node, xml_node):
-        self.add_subnodes(tv_node, xml_node, 'APPLICATION-MODE-MACHINE', 'applicationModeMachine')
-        pass
 
-    def subnode_added(self, tv_node, xml_node, tag_name):
-        if tag_name == 'MODE-DEPENDENT-STARTUP-CONFIG':
-            self.add_value(tv_node, xml_node, 'STARTUP-CONFIG-REF', 'StartupConfigRef')
-            self.add_subnodes(tv_node, xml_node, 'FUNCTION-GROUP-IREF', 'functionGroupMode')
-            self.add_subnodes(tv_node, xml_node, 'MACHINE-MODE-IREF', 'machineMode')
-        if tag_name == 'FUNCTION-GROUP-IREF':
-            self.show_detail_mode_ref(tv_node, xml_node)
-        if tag_name == 'MACHINE-MODE-IREF':
-            self.show_detail_mode_ref(tv_node, xml_node)
-        pass
-
-    def show_detail_app_mode_machine(self, my_tree, xml_node):
-        self.add_value(my_tree, xml_node, 'TYPE-TREF')

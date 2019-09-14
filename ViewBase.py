@@ -37,13 +37,46 @@ class ViewBase():
         for s in itemlist:
             namespace = getNameSpace(s)
             name = getShortName(s)
-            node_name = s.localName
-            node = self.add_row(self.view_root_node, [[self.node_name, s.localName], name, namespace, filename], s)
-            #node = QStandardItem(node_name)
-            #self.view_root_node.appendRow([node, QStandardItem(name), QStandardItem(namespace), QStandardItem(filename)])
+            type_name = self.node_name
+            node = self.add_node_name_node(self.view_root_node, name, namespace, filename, s)
             self.cache.add(self.xml_tag_name, [namespace, name], node)
-            #attach_xml_node(node, s)
             self.node_added(node, s)
+
+    def add_node_name_node(self, parent, name, namespace, filename, xml_node):
+        item0 = QStandardItem(name)
+        item0.setData(RoleTypeName, RoleType)
+        item0.setData(xml_node, RoleXmlNode)
+        item0.setToolTip(xml_node.localName)
+        item1 = None
+        item2 = QStandardItem(namespace)
+        item3 = QStandardItem(filename)
+        parent.appendRow([item0, item1, item2, item3])
+        return item0
+
+
+    def add_subnodes(self, parent, xml_node, tag_name, type_name = None):
+        itemlist = xml_node.getElementsByTagName(tag_name)
+        for s in itemlist:
+            name = getShortName(s)
+            namespace = getNameSpace(s)
+            #node = self.add_node_value(tv_parent, name, type_name, tag_name, None, namespace, None, s)
+            #node = self.add_node_name_node(tv_parent, name, namespace, None, s)
+            node = self.add_node2(parent, name, namespace=namespace, xml_node=s)
+            self.cache.add(tag_name, [namespace, getShortName(s)], node)   
+            self.subnode_added(node, s, tag_name)
+
+    def add_subnodes2(self, parent, xml_node, name, tag_name, callback = None, h=None):
+        itemlist = xml_node.getElementsByTagName(tag_name)
+        italic = name==None
+        local_name = name
+        for s in itemlist:
+            if not name:
+                local_name = getShortName(s)
+            namespace = getNameSpace(s)
+            node = self.add_node2(parent, local_name, xml_node=s, h=h, italic=italic)
+            self.cache.add(tag_name, [namespace, getShortName(s)], node)
+            if callback:
+                callback(node, s)   
 
 
     def get_tv_node_with_namespace(self, namespace):
@@ -111,7 +144,9 @@ class ViewBase():
     def add_row(self, parent, arg_list, xml_node = None):
         return self.add_tv_row_detail(parent, arg_list, xml_node)
 
-    def add_tv_row_detail(self, parent, arg_list, xml_node = None):
+
+
+    def add_tv_row_detail(self, parent, arg_list, xml_node = None, h = None, italic = False):
         row = []
         first_item = None
         item = None
@@ -126,6 +161,9 @@ class ViewBase():
             row.append(item)
         parent.appendRow(row)
         attach_xml_node(first_item, xml_node)
+        first_item.setData(h, RoleHelp)
+        if italic:
+            first_item.setData(RoleTypeName, RoleType)
         return first_item
 
 
@@ -139,28 +177,52 @@ class ViewBase():
         attach_xml_node(node, xml_node)
         return node    
 
+    def add_node_value(self, parent, name, type_name, xml_name, value, namespace, filename, xml_node):
+        item0 = QStandardItem(name)
+        item0.setData(type_name, RoleType)
+        item0.setData(xml_node, RoleXmlNode)
+        item0.setToolTip(xml_name)
+        item1 = QStandardItem(value)
+        item2 = QStandardItem(namespace)
+        item3 = QStandardItem(filename)
+        parent.appendRow([item0, item1, item2, item3])
+        return item0
 
-    def add_subnodes(self, tv_parent, xml_parent, tag_name, shown_name = None):
-        itemlist = xml_parent.getElementsByTagName(tag_name)
-        for s in itemlist:
-            namespace = getNameSpace(s)
-            name = getShortName(s)
-            shown_name_space = namespace
-            if not shown_name:
-                shown_name = tag_name
-            node = self.add_tv_row_detail(tv_parent, [[shown_name, tag_name], name, namespace], s)
-            self.cache.add(tag_name, [namespace, getShortName(s)], node)   
-            self.subnode_added(node, s, tag_name)
 
     def subnode_added(self, tv_node, xml_node, tag_name):
         pass
 
-    def add_value(self, model, xml_node, xml_tag_name, shown_name = None):
+    def add_value(self, model, xml_node, xml_tag_name, shown_name = None, h = None, italic = False):
         value = getValueByName(xml_node, xml_tag_name)
         node = findFirstChildNodeByName(xml_node, xml_tag_name)
         if not shown_name:
             shown_name = xml_tag_name
-        self.add_tv_row_detail(model, [[shown_name, xml_tag_name], value], node)            
+        self.add_tv_row_detail(model, [[shown_name, xml_tag_name], value], node, h, italic)            
 
     def add_short_name(self, model, xml_node):
-        self.add_value(model, xml_node, 'SHORT-NAME', 'name')
+        self.add_value(model, xml_node, 'SHORT-NAME', 'Name')
+
+    def add_node2(self, parent, name = None, value = None, namespace = None, xml_node = None, h=None, italic=False):
+        node = QStandardItem(name)
+        node.setData(xml_node, RoleXmlNode)
+        node.setData(h, RoleHelp)
+        if xml_node:
+            node.setToolTip(xml_node.localName)
+        if italic:
+            node.setData(RoleTypeName, RoleType)
+
+        row = [node]
+        #item0.setData(type_name, RoleType)
+        #item0.setData(xml_node, RoleXmlNode)
+        #item0.setToolTip(xml_name)
+        #item1 = QStandardItem(value)
+        #item2 = QStandardItem(namespace)
+        #item3 = QStandardItem(filename)
+        if value:
+            while len(row) < 2: row.append(QStandardItem(None))
+            row[1] = QStandardItem(value)
+        if namespace:
+            while len(row) < 3: row.append(QStandardItem(None))
+            row[2] = QStandardItem(namespace)
+        parent.appendRow(row)
+        return node
